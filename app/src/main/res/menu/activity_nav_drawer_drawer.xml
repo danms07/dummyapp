@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_cloud_function"
+            android:title="@string/menu_cloud_function" />
+        <item
+            android:id="@+id/nav_scan"
+            android:title="@string/menu_remote" />
+        <item
+            android:id="@+id/nav_crash"
+            android:title="@string/menu_crash" />
+        <item
+            android:id="@+id/nav_link"
+            android:title="@string/menu_link"/>
+
+        <item android:id="@+id/publishAPI"
+            android:title="@string/menu_publish_api"/>
+        <item android:id="@+id/deviceId"
+            android:title="@string/menu_device_id"/>
+
+        <item android:id="@+id/AccountBind"
+            android:title="@string/accountBinding"/>
+    </group>
+
+    <!--<group android:checkableBehavior="single">
+        <item
+            android:id="@+id/logout"
+            android:title="@string/logout"
+            />
+    </group>-->
+</menu>

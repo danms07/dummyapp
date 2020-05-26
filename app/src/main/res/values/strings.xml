@@ -1,0 +1,49 @@
+<resources>
+    <string name="app_name">DummyApplication</string>
+    <string name="hello">Hello from Deep Link</string>
+    <string name="title_activity_nav_drawer">NavDrawer</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="dynamic_features">Dynamic Features</string>
+    <string name="battery_settings">Battery Settings</string>
+    <string name="menu_cloud_function">Cloud Function</string>
+    <string name="menu_remote">Remote</string>
+    <string name="menu_crash">Crash</string>
+    <string name="facebook_app_id">537899863809521</string>
+    <string name="fb_login_protocol_scheme">fb537899863809521</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="sign_hw_id">Sign In with HUAWEI ID</string>
+    <string name="anonymous">Anonymous Account</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="logout">Log Out</string>
+    <string name="home_second">Home Second</string>
+    <string name="title_dynamicfeature1">DemoFeature</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="app_link_builder">App Link Builder</string>
+    <string name="name">Your Name</string>
+    <string name="generate_deep_link">Generate Deep Link</string>
+    <string name="result">Result</string>
+    <string name="menu_link">App Link</string>
+    <string name="menu_publish_api">Publish API</string>
+    <string name="channel_name">ABTesting</string>
+    <string name="perform_publish">Publish Operation</string>
+    <string name="menu_device_id">Device Id</string>
+    <string name="get_oaid">Get OAID</string>
+    <string name="get_aaid">Get AAID</string>
+
+    <string name="accountBind">Do Account Binding</string>
+    <string name="accountBinding">Account Binding</string>
+    <string name="obtainedDeepLink">Obtained deeplink:</string>
+    <string name="waitingResult">Waiting for Result</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

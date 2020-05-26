@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_cloud_function">
+
+    <fragment
+        android:id="@+id/nav_cloud_function"
+        android:name="com.hms.example.dummyapplication.ui.cloud_function.CloudFunctionFragment"
+        android:label="@string/menu_cloud_function"
+        tools:layout="@layout/fragment_cloud_function">
+        <action
+            android:id="@+id/action_HomeFragment_to_HomeSecondFragment"
+            app:destination="@id/nav_home_second" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/nav_home_second"
+            android:name="com.hms.example.dummyapplication.ui.cloud_function.CloudFunctionFragment"
+            android:label="@string/home_second"
+            tools:layout="@layout/fragment_cloud_function">
+            <action
+                android:id="@+id/action_HomeSecondFragment_to_HomeFragment"
+                app:destination="@id/nav_cloud_function" />
+
+            <argument
+                android:name="myArg"
+                app:argType="string" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/nav_scan"
+        android:name="com.hms.example.dummyapplication.ui.remote.RemoteFragment"
+        android:label="@string/menu_remote"
+        tools:layout="@layout/fragment_remote" />
+
+    <fragment
+        android:id="@+id/nav_crash"
+        android:name="com.hms.example.dummyapplication.ui.crash.CrashFragment"
+        android:label="@string/menu_crash"
+        tools:layout="@layout/fragment_crash" />
+    <fragment
+        android:id="@+id/nav_link"
+        android:name="com.hms.example.dummyapplication.ui.LinkFragment"
+        android:label="@string/menu_link"
+        tools:layout="@layout/fragment_link"/>
+
+    <fragment
+        android:id="@+id/publishAPI"
+        android:name="com.hms.example.dummyapplication.ui.PublishApiFragment"
+        android:label="@string/menu_publish_api"
+        tools:layout="@layout/fragment_publish_api"/>
+
+    <fragment
+        android:id="@+id/deviceId"
+        android:name="com.hms.example.dummyapplication.ui.DeviceIdFragment"
+        android:label="@string/menu_device_id"
+        tools:layout="@layout/fragment_device_id"
+        />
+
+    <fragment
+        android:id="@+id/AccountBind"
+        android:name="com.hms.example.dummyapplication.ui.AccountBindingFragment"
+        android:label="@string/accountBinding"
+        tools:layout="@layout/fragment_account_binding"
+        />
+</navigation>
