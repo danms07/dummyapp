@@ -13,12 +13,18 @@ import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.common.SignInButton
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
 import com.hms.example.dummyapplication.AccountBindingAsync
+import com.hms.example.dummyapplication.DemoConstants
 import com.hms.example.dummyapplication.R
-import com.huawei.agconnect.auth.AGConnectAuth
-import com.huawei.agconnect.auth.AGConnectUser
-import com.huawei.agconnect.auth.FacebookAuthProvider
-import com.huawei.agconnect.auth.HwIdAuthProvider
+import com.huawei.agconnect.auth.*
 import com.huawei.hms.common.ApiException
 import com.huawei.hms.support.hwid.HuaweiIdAuthManager
 import com.huawei.hms.support.hwid.request.HuaweiIdAuthParams
@@ -27,6 +33,7 @@ import com.huawei.hms.support.hwid.request.HuaweiIdAuthParamsHelper
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener,
     AccountBindingAsync.OnAccountBindListener {
+    private val GOOGLE_SIGN_IN: Int = 1001
     val REQUEST_SIGN_IN_LOGIN_CODE = 1003
     val TAG = "LoginActivity"
     lateinit var mCallbackManager: CallbackManager
@@ -39,7 +46,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener,
         fbBtn.setPermissions("email", "public_profile")
         hwBtn.setOnClickListener(this)
         findViewById<Button>(R.id.anon).setOnClickListener(this)
-
+        setUpGoogleLogin()
         val appLinkIntent = getIntent()
         //val appLinkAction = appLinkIntent.getAction()
         val appLinkData = appLinkIntent.getData()
@@ -82,13 +89,20 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener,
         })
     }
 
-    private fun startNavDrawer(user: AGConnectUser) {
-        Log.e("User", "${user.displayName}\t${user.email}\t${user.uid}\t${user.phone}")
+    private fun setUpGoogleLogin() {
+        val status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
+        if (status == ConnectionResult.SUCCESS) {
+            val googleButton = findViewById<SignInButton>(R.id.sign_in_button)
+            googleButton.visibility = View.VISIBLE
+            googleButton.setOnClickListener(this)
+        }
+    }
 
-        val intent = Intent(
-            this,
-            MainActivity::class.java
-        )
+    private fun startNavDrawer(user: AGConnectUser) {
+        val intent = Intent(this, NavDrawer::class.java)
+        if(user.displayName!=null)
+            intent.putExtra(DemoConstants.DISPLAY_NAME,user.displayName)
+        intent.putExtra(DemoConstants.USER_ID,user.uid)
         startActivity(intent)
         finish()
     }
@@ -141,6 +155,17 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener,
                 )
             }
 
+            R.id.sign_in_button -> {
+                val gso: GoogleSignInOptions =
+                    GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestIdToken("551750913679-hj805b8u3m33ajo3qukthlj7bj8iecv5.apps.googleusercontent.com")
+                        .requestProfile()
+                        .build()
+                val mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
+                val signInIntent: Intent = mGoogleSignInClient.getSignInIntent()
+                startActivityForResult(signInIntent, GOOGLE_SIGN_IN)
+            }
+
             R.id.anon -> {
                 AGConnectAuth.getInstance().signInAnonymously().addOnSuccessListener {
                     // onSuccess
@@ -179,6 +204,20 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener,
                     "signIn get code failed: " + (authHuaweiIdTask.exception as ApiException).statusCode
                 )
             }
+        } else if (requestCode == GOOGLE_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            task.addOnSuccessListener { googleSignInAccount ->
+                val idToken = googleSignInAccount.idToken
+                val credential = GoogleAuthProvider.credentialWithToken(idToken)
+                AGConnectAuth.getInstance().signIn(credential).addOnSuccessListener {
+                    // onSuccess
+                    val user = it.user
+                    startNavDrawer(user)
+                }.addOnFailureListener {
+                    // onFail
+                }
+            }
+                .addOnFailureListener { exception -> Log.e(TAG, exception.toString()) }
         } else {
             mCallbackManager.onActivityResult(requestCode, resultCode, data)//For facebook
         }

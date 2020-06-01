@@ -1,19 +1,20 @@
 <resources>
-    <string name="app_name">DummyApplication</string>
+    <string name="app_name" translatable="false">DummyApplication</string>
     <string name="hello">Hello from Deep Link</string>
     <string name="title_activity_nav_drawer">NavDrawer</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="nav_header_title" translatable="false">Android Studio</string>
+    <string name="nav_header_subtitle" translatable="false">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="dynamic_features">Dynamic Features</string>
     <string name="battery_settings">Battery Settings</string>
     <string name="menu_cloud_function">Cloud Function</string>
     <string name="menu_remote">Remote</string>
     <string name="menu_crash">Crash</string>
-    <string name="facebook_app_id">537899863809521</string>
-    <string name="fb_login_protocol_scheme">fb537899863809521</string>
+    <string name="facebook_app_id" translatable="false">537899863809521</string>
+    <string name="fb_login">Continue with Facebook</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb537899863809521</string>
 
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>

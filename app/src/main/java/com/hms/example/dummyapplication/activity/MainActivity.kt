@@ -8,6 +8,7 @@ import android.os.Handler
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.hms.example.dummyapplication.DemoConstants
 import com.hms.example.dummyapplication.R
 import com.huawei.agconnect.auth.AGConnectAuth
 import com.huawei.agconnect.auth.AGConnectUser
@@ -27,8 +28,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, Runnable{
         initDefaults()//Remote Config
         createNotificationChannel()
         if(AGConnectAuth.getInstance().currentUser!=null){
-            val user:AGConnectUser=AGConnectAuth.getInstance().currentUser
-            Log.e("User","${user.displayName}\t${user.email}\t${user.uid}\t${user.phone}")
             val handler:Handler=Handler();
             handler.postDelayed(this,1000)
         }
@@ -86,7 +85,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, Runnable{
     }
 
     override fun run() {
+        val user:AGConnectUser=AGConnectAuth.getInstance().currentUser
         val intent=Intent(this, NavDrawer::class.java)
+        if(user.displayName!=null)
+            intent.putExtra(DemoConstants.DISPLAY_NAME,user.displayName)
+        intent.putExtra(DemoConstants.USER_ID,user.uid)
         startActivity(intent)
         finish()
     }

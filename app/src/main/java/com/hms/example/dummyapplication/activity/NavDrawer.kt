@@ -59,8 +59,13 @@ class NavDrawer : AppCompatActivity(),
         val headerLayout=navView.getHeaderView(0)
         val displayName=headerLayout.findViewById<TextView>(R.id.display_name)
         val userId=headerLayout.findViewById<TextView>(R.id.userid)
+        val intent=this.intent
         if(intent.hasExtra(DemoConstants.DISPLAY_NAME)){
-
+            displayName.text=intent.getStringExtra(DemoConstants.DISPLAY_NAME)
+        }
+        else displayName.text=getString(R.string.anonymous)
+        if(intent.hasExtra(DemoConstants.USER_ID)){
+            userId.text=intent.getStringExtra(DemoConstants.USER_ID)
         }
 
 
