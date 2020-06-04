@@ -18,7 +18,7 @@
 
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_slideshow">Crash</string>
     <string name="sign_hw_id">Sign In with HUAWEI ID</string>
     <string name="anonymous">Anonymous Account</string>
     <string name="ok">OK</string>
@@ -44,7 +44,8 @@
     <string name="accountBinding">Account Binding</string>
     <string name="obtainedDeepLink">Obtained deeplink:</string>
     <string name="waitingResult">Waiting for Result</string>
-
+    <string name="load_dialog_title">Connecting</string>
+    <string name="load_dialog_message">Please Wait</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

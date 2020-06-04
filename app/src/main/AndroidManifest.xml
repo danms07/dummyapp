@@ -33,6 +33,17 @@
                     android:host="dummyapp.com"
                     android:path="/login" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="dummyapp"
+                    android:host="dummyapp.com"
+                    android:path="/login" />
+            </intent-filter>
         </activity>
 
         <meta-data
@@ -106,6 +117,17 @@
                     android:scheme="http"
                     android:host="mylink.com"
                     android:path="/target1" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name="net.openid.appauth.RedirectUriReceiverActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data android:scheme="com.hms.example.dummyapplication"/>
             </intent-filter>
         </activity>
     </application>

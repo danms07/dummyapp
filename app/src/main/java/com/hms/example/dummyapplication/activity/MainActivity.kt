@@ -64,6 +64,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, Runnable{
         val map=HashMap <String,Any>()
         map["label_color"] = "blue"
         map["text_color"] = "white"
+        map["label_text"]="Remote Fragment"
         map["test1"] = 123
         //Apply defaults
         val config = AGConnectConfig.getInstance()

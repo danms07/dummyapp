@@ -47,11 +47,12 @@ class RemoteFragment : Fragment() {
      */
     private fun fetchRemotes() {
 
-        config.fetch().addOnSuccessListener {
+        config.fetch(10).addOnSuccessListener {
             config.apply(it)
             val textColor=config.getValueAsString("text_color")
-
+            val labelText=config.getValueAsString("label_text")
             val textBackground=config.getValueAsString("label_color")
+            textView.text=labelText
             val labelColor:Int
             val resources=activity?.resources
             if(resources!=null){

@@ -24,6 +24,9 @@ android {
         targetSdkVersion 29
         versionCode 3
         versionName "1.1.1"
+        manifestPlaceholders = [
+                'appAuthRedirectScheme': 'com.googleusercontent.apps.PREFIX'
+        ]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -101,7 +104,8 @@ dependencies {
     api 'com.huawei.hms:ads-identifier:3.4.28.305'
     api 'com.huawei.hms:opendevice:4.0.1.300'
 
-
+    implementation 'net.openid:appauth:0.7.1'
+    implementation 'com.squareup.okio:okio:1.14.1'
 
     /*api ('org.apache.httpcomponents:httpmime:4.5.12'){
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
