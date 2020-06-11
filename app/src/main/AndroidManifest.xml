@@ -2,13 +2,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.hms.example.dummyapplication">
     <!-- Camera permission -->
-    <uses-permission android:name="android.permission.CAMERA" /> <!-- File reading permission -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- To upgrade HMS through HMS-SDK, OTA server access permission is required. -->
-    <uses-permission android:name="android.permission.INTERNET" /> <!-- HMS upgrade through HMS-SDK. To save a downloaded upgrade package, SD card write permission is required. -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- Test network status -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- Test wifi status -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- To get the IMEI, the unique user ID, from the user phone. -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- File reading permission -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- To upgrade HMS through HMS-SDK, OTA server access permission is required. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- HMS upgrade through HMS-SDK. To save a downloaded upgrade package, SD card write permission is required. -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- Test network status -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- Test wifi status -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- To get the IMEI, the unique user ID, from the user phone. -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <uses-permission android:name="com.huawei.appmarket.service.commondata.permission.GET_COMMON_DATA"/>
 
 
     <application
@@ -45,7 +53,7 @@
                     android:path="/login" />
             </intent-filter>
         </activity>
-
+        <!--########### FACEBOOK LOGIN ##############################################################-->
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -66,7 +74,7 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-
+        <!--########################################################################################-->
 
         <service
             android:name=".MyHuaweiPushService"
@@ -79,7 +87,7 @@
 
         <meta-data
             android:name="com.huawei.hms.client.appid"
-            android:value="appid=101986057">
+            android:value="@string/pushAppId">
 
             <!-- Replace the value of xxx with the actual app ID applied, sourced from Service Details, HUAWEI Developer. -->
         </meta-data>

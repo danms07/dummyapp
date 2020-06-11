@@ -1,5 +1,6 @@
 package com.hms.example.dummyapplication.ui.cloud_function
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -32,7 +34,7 @@ class CloudFunctionFragment : Fragment(), View.OnClickListener, OnCompleteListen
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        cloudFunctionViewModel =ViewModelProvider(this).get(CloudFunctionViewModel::class.java)
+        cloudFunctionViewModel = ViewModelProvider(this).get(CloudFunctionViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_cloud_function, container, false)
         val textView: TextView = root.findViewById(R.id.text_home)
         cloudFunctionViewModel.text.observe(viewLifecycleOwner, Observer {
@@ -48,12 +50,19 @@ class CloudFunctionFragment : Fragment(), View.OnClickListener, OnCompleteListen
     }
 
     override fun onClick(v: View?) {
-        if(v?.id==R.id.btn){
+        if (v?.id == R.id.btn) {
 
-            val n1String=n1.text.toString()
-            val n2String=n2.text.toString()
-            if(n1String.isEmpty()||n2String.isEmpty()){
-                return
+            val n1String = n1.text.toString()
+            val n2String = n2.text.toString()
+            if (n1String.isEmpty() || n2String.isEmpty()) {
+                val builder = AlertDialog.Builder(requireContext())
+                builder.setTitle(R.string.attention)
+                builder.setMessage(R.string.cf_message)
+                builder.setPositiveButton(R.string.ok){ dialogInterface: DialogInterface, i: Int ->
+                    dialogInterface.dismiss()
+                }
+                builder.create().show()
+
             }
             val map: HashMap<String, Int> = HashMap()
             val number1 = Integer.parseInt(n1String)
@@ -71,13 +80,13 @@ class CloudFunctionFragment : Fragment(), View.OnClickListener, OnCompleteListen
         if (task != null) {
             if (task.isSuccessful) {
                 val value = task.result.value
-                Log.e(TAG,value)
-                try{
-                    val json=JSONObject(value)
-                    val message="Result: ${json.get("result")}"
+                Log.e(TAG, value)
+                try {
+                    val json = JSONObject(value)
+                    val message = "Result: ${json.get("result")}"
                     cloudFunctionViewModel.setText(message)
-                }catch (e:JSONException){
-                    Log.e(TAG,e.toString())
+                } catch (e: JSONException) {
+                    Log.e(TAG, e.toString())
                 }
 
             } else {

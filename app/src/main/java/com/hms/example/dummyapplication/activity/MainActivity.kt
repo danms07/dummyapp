@@ -27,6 +27,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, Runnable{
         AGConnectCrash.getInstance().enableCrashCollection(true)
         initDefaults()//Remote Config
         createNotificationChannel()
+        val bundle=intent.extras
+        if(bundle!=null){
+            for(key in bundle.keySet())
+            Log.e(TAG,"$key ${bundle.get(key)}")
+        }
+
         if(AGConnectAuth.getInstance().currentUser!=null){
             val handler:Handler=Handler();
             handler.postDelayed(this,1000)

@@ -1,9 +1,9 @@
 package com.hms.example.dummyapplication.connectapi
 
 import android.util.Log
-import org.apache.http.HttpEntity
-import org.apache.http.HttpStatus
-import org.apache.http.client.methods.HttpPost
+//import org.apache.http.HttpEntity
+//import org.apache.http.HttpStatus
+//import org.apache.http.client.methods.HttpPost
 //import org.apache.http.entity.mime.MultipartEntityBuilder
 //import org.apache.http.entity.mime.content.FileBody
 //import org.apache.http.impl.client.HttpClients
@@ -43,7 +43,7 @@ class ConnectApiHelper (){
         return ""
     }
 
-    fun getAppInfo(domain:String,clientId:String,token:String,appId:String,lang:String){
+    fun getAppInfo(domain:String,clientId:String,token:String,appId:String,lang:String):String{
         try {
             val url=URL("$domain/publish/v2/app-info?appid=$appId&lang=$lang")
             val conn=url.openConnection() as HttpURLConnection
@@ -53,11 +53,14 @@ class ConnectApiHelper (){
             if(code==200){
                 val result=convertStreamToString(conn.inputStream)
                 Log.e("GetAppInfo",result)
+                return result
             }
             Log.e("GetAppInfo","Code:$code\tMessage:${conn.responseMessage}")
+
         }catch (e:Exception){
 
         }
+        return "Unable to get App Info"
     }
 
     fun queryAppId(domain:String,clientId:String,token:String,packageName:String):String{
@@ -202,7 +205,7 @@ class ConnectApiHelper (){
         }
     }
 
-    fun getReport(domain:String,clientId: String,token: String,appId: String,lang: String,startTime:String,endTime:String,filterCondition:List<String>,filterConditionValue:List<String>){
+    fun getReport(domain:String,clientId: String,token: String,appId: String,lang: String,startTime:String,endTime:String,filterCondition:List<String>,filterConditionValue:List<String>):String{
         val fc = java.lang.StringBuilder()
         for (i in filterCondition.indices) {
             fc.append("&filterCondition=")
@@ -220,11 +223,13 @@ class ConnectApiHelper (){
             if(conn.responseCode==200){
                 val response=convertStreamToString(conn.inputStream)
                 Log.e("getReport",response)
+                return response
             }
 
         }catch (e:Exception){
 
         }
+        return "Unable to get the report"
     }
 
     fun uploadJson(json:JSONObject,os:OutputStream){

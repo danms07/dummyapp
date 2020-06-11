@@ -84,7 +84,8 @@ class NavDrawer : AppCompatActivity(),
                 R.id.nav_link,
                 R.id.publishAPI,
                 R.id.deviceId,
-                R.id.AccountBind
+                R.id.AccountBind,
+                R.id.map
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

@@ -12,7 +12,7 @@ class RunnableTask(val context: Context):Runnable{
             val appId = AGConnectServicesConfig.fromContext(context).getString("client/app_id")
             val pushtoken = HmsInstanceId.getInstance(context).getToken(appId, "HCM")
             if (!TextUtils.isEmpty(pushtoken)) {
-                Log.i("GetToken", "get token:$pushtoken")
+                Log.i("GetToken", "push token:$pushtoken")
                 val listener:RunnableTaskListener=context as RunnableTaskListener
                 listener.onTokenFetched(pushtoken)
             }

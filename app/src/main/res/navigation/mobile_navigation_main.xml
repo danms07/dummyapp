@@ -66,4 +66,10 @@
         android:label="@string/accountBinding"
         tools:layout="@layout/fragment_account_binding"
         />
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.hms.example.dummyapplication.ui.MapFragment"
+        android:label="@string/menu_map"
+        tools:layout="@layout/fragment_map"/>
 </navigation>

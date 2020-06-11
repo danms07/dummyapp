@@ -24,6 +24,11 @@
 
         <item android:id="@+id/AccountBind"
             android:title="@string/accountBinding"/>
+
+        <item
+            android:id="@+id/map"
+            android:title="@string/menu_map"
+            />
     </group>
 
     <!--<group android:checkableBehavior="single">

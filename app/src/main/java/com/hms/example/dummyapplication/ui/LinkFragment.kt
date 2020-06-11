@@ -2,6 +2,7 @@ package com.hms.example.dummyapplication.ui
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import com.huawei.agconnect.applinking.AppLinking.AndroidLinkInfo
 class LinkFragment : Fragment(), View.OnClickListener {
     lateinit var nameText:EditText
     lateinit var result:TextView
+    private val TAG="LinkFragment"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,6 +51,7 @@ class LinkFragment : Fragment(), View.OnClickListener {
             val shortLinkUri: Uri = shortAppLinking.shortUrl
             result.text = shortLinkUri.toString()
         }.addOnFailureListener { e ->//Handle failure
+            Log.e(TAG,e.toString())
         }
 
         //result.text = applinkgUri.toString()

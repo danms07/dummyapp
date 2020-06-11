@@ -20,7 +20,7 @@ class DemoActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_demo)
-        val tv=findViewById<TextView>(R.id.textview)
+        //val tv=findViewById<TextView>(R.id.textview)
         val fab:FloatingActionButton=findViewById(R.id.fab)
         fab.setOnClickListener(this)
     }

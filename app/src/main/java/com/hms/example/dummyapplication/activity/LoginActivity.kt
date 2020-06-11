@@ -14,7 +14,6 @@ import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.SignInButton
 import com.hms.example.dummyapplication.AccountBindingAsync
 import com.hms.example.dummyapplication.DemoConstants
@@ -31,9 +30,7 @@ import net.openid.appauth.*
 class LoginActivity : AppCompatActivity(), View.OnClickListener,
     AccountBindingAsync.OnAccountBindListener {
     private val GOOGLE_SIGN_IN: Int = 1001
-    val REQUEST_SIGN_IN_LOGIN_CODE = 1003
-    val PACKAGE_NAME="com.hms.example.dummyapplication"
-    private val RC_AUTH = 1000
+    val HWID_SIGN_IN = 1003
     //var hasGooglePlayServices = false
     val TAG = "LoginActivity"
     lateinit var mCallbackManager: CallbackManager
@@ -156,38 +153,27 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener,
                 val mAuthManager = HuaweiIdAuthManager.getService(this, mAuthParam)
                 startActivityForResult(
                     mAuthManager.signInIntent,
-                    REQUEST_SIGN_IN_LOGIN_CODE
+                    HWID_SIGN_IN
                 )
             }
 
             R.id.google_sign_in_button -> {
-                /*if(hasGooglePlayServices){
-                    val gso: GoogleSignInOptions =
-                        GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                            //.requestIdToken("551750913679-tpmvq9jb2l3jnqq61q7cbjg0hnqrj9hi.apps.googleusercontent.com")
-                            .requestIdToken("551750913679-hj805b8u3m33ajo3qukthlj7bj8iecv5.apps.googleusercontent.com")
-                            .requestProfile()
-                            .build()
-                    val mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
-                    val signInIntent: Intent = mGoogleSignInClient.getSignInIntent()
-                    startActivityForResult(signInIntent, GOOGLE_SIGN_IN)
-                }*/
-                //else{
                     val serviceConfig = AuthorizationServiceConfiguration(
                         Uri.parse("https://accounts.google.com/o/oauth2/auth"), // authorization endpoint
                         Uri.parse("https://oauth2.googleapis.com/token")
-                    ); // token endpoint
+                    ) // token endpoint
+                    val clientId=getString(R.string.google_client_id)
                     val authRequestBuilder = AuthorizationRequest.Builder(
                         serviceConfig,  // the authorization service configuration
-                        "551750913679-tpmvq9jb2l3jnqq61q7cbjg0hnqrj9hi.apps.googleusercontent.com",  // the client ID, typically pre-registered and static
+                        clientId,  // the client ID, typically pre-registered and static
                         ResponseTypeValues.CODE,  //
-                        Uri.parse("$PACKAGE_NAME:/oauth2redirect")
+                        Uri.parse("$packageName:/oauth2redirect")
                     ) // the redirect URI to which the auth response is sent
                     authRequestBuilder.setScope("openid email profile")
                     val authRequest = authRequestBuilder.build()
                     val authService = AuthorizationService(this)
                     val authIntent = authService.getAuthorizationRequestIntent(authRequest)
-                    startActivityForResult(authIntent, RC_AUTH)
+                    startActivityForResult(authIntent, GOOGLE_SIGN_IN)
                     authService.dispose()
                 //}
             }
@@ -207,13 +193,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener,
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_SIGN_IN_LOGIN_CODE) {
+        if (requestCode == HWID_SIGN_IN) {
             //Huawei login success
             val authHuaweiIdTask = HuaweiIdAuthManager.parseAuthResultFromIntent(data)
             if (authHuaweiIdTask.isSuccessful) {
                 val huaweiAccount = authHuaweiIdTask.result
-                /**** english doc:For security reasons, the operation of changing the code to an AT must be performed on your server. The code is only an example and cannot be run.  */
-                /** */
                 val accessToken = huaweiAccount.accessToken
                 val credential = HwIdAuthProvider.credentialWithToken(accessToken)
                 AGConnectAuth.getInstance().signIn(credential).addOnSuccessListener {
@@ -230,23 +214,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener,
                     "signIn get code failed: " + (authHuaweiIdTask.exception as ApiException).statusCode
                 )
             }
-        } else if (requestCode == GOOGLE_SIGN_IN) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            task.addOnSuccessListener { googleSignInAccount ->
-                val idToken = googleSignInAccount.idToken
-                Log.e(TAG,googleSignInAccount.idToken)
-                val credential = GoogleAuthProvider.credentialWithToken(idToken)
-                AGConnectAuth.getInstance().signIn(credential).addOnSuccessListener {
-                    // onSuccess
-                    val user = it.user
-                    startNavDrawer(user)
-                }.addOnFailureListener {
-                    // onFail
-                }
-            }
-                .addOnFailureListener { exception -> Log.e("GoogleSignIn", exception.toString()) }
         }
-        else if(requestCode == RC_AUTH){
+        else if(requestCode == GOOGLE_SIGN_IN){
             if (data != null) {
                 val response = AuthorizationResponse.fromIntent(data)
                 val ex = AuthorizationException.fromIntent(data)

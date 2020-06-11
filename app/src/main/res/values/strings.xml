@@ -10,11 +10,12 @@
     <string name="dynamic_features">Dynamic Features</string>
     <string name="battery_settings">Battery Settings</string>
     <string name="menu_cloud_function">Cloud Function</string>
+    <string name="menu_map">Map</string>
     <string name="menu_remote">Remote</string>
     <string name="menu_crash">Crash</string>
-    <string name="facebook_app_id" translatable="false">537899863809521</string>
+
     <string name="fb_login">Continue with Facebook</string>
-    <string name="fb_login_protocol_scheme" translatable="false">fb537899863809521</string>
+
 
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
@@ -35,7 +36,7 @@
     <string name="menu_link">App Link</string>
     <string name="menu_publish_api">Publish API</string>
     <string name="channel_name">ABTesting</string>
-    <string name="perform_publish">Publish Operation</string>
+    <string name="perform_publish">Test the Publish API</string>
     <string name="menu_device_id">Device Id</string>
     <string name="get_oaid">Get OAID</string>
     <string name="get_aaid">Get AAID</string>
@@ -48,4 +49,12 @@
     <string name="load_dialog_message">Please Wait</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="attention">Attention</string>
+    <string name="cf_message">Please provide two numbers to sum</string>
+
+
+    <string name="fb_login_protocol_scheme" translatable="false">fb537899863809521</string>
+    <string name="facebook_app_id" translatable="false">537899863809521</string>
+    <string name="pushAppId">appid=101986057</string>
+    <string name="google_client_id">"551750913679-tpmvq9jb2l3jnqq61q7cbjg0hnqrj9hi.apps.googleusercontent.com"</string>
 </resources>
