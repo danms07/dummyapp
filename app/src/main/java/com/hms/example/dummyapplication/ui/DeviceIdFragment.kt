@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import com.google.android.material.snackbar.Snackbar
-import com.hms.example.dummyapplication.DevIdThread
+import com.hms.example.dummyapplication.utils.DevIdThread
 
 import com.hms.example.dummyapplication.R
 
@@ -36,10 +36,18 @@ class DeviceIdFragment : Fragment(), View.OnClickListener, DevIdThread.DevIdThre
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.aaidbtn ->{
-                DevIdThread(requireContext(),this,DevIdThread.AAID).start()
+                DevIdThread(
+                    requireContext(),
+                    this,
+                    DevIdThread.AAID
+                ).start()
             }
             R.id.oaidbtn ->{
-                DevIdThread(requireContext(),this,DevIdThread.OAID).start()
+                DevIdThread(
+                    requireContext(),
+                    this,
+                    DevIdThread.OAID
+                ).start()
             }
             else ->{
 

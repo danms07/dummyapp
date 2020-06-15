@@ -7,7 +7,6 @@ import android.util.Log
 //import org.apache.http.entity.mime.MultipartEntityBuilder
 //import org.apache.http.entity.mime.content.FileBody
 //import org.apache.http.impl.client.HttpClients
-import org.apache.http.util.EntityUtils
 import org.json.JSONObject
 import java.io.*
 import java.net.HttpURLConnection
@@ -86,7 +85,7 @@ class ConnectApiHelper (){
         return ""
     }
 
-    fun updateBasicInformation(domain:String,clientId: String,token: String,appId: String){
+    /*fun updateBasicInformation(domain:String,clientId: String,token: String,appId: String){
         try{
             val url=URL("$domain/publish/v2/app-info?appId=$appId")
             val conn=url.openConnection() as HttpURLConnection
@@ -95,7 +94,10 @@ class ConnectApiHelper (){
             conn.setRequestProperty("client_id", clientId)
             conn.setRequestProperty("content-type","application/json; utf-8")
             val content=JSONObject()
+            //1 for free 0 for paid
             content.put("isFree", 1)
+            content.put("developerEmail","sdf@sdf.com")
+            content.put("developerWebsite","")
             uploadJson(content,conn.outputStream)
             val code=conn.responseCode
             if(code==200){
@@ -107,7 +109,7 @@ class ConnectApiHelper (){
         }catch (e:Exception){
 
         }
-    }
+    }*/
 
     fun appRelease(domain: String,clientId: String,token: String,appId: String){
         val url=URL("$domain/publish/v2/app-submit?appid=$appId")

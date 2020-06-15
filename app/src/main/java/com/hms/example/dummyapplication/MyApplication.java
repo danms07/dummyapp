@@ -3,7 +3,6 @@ package com.hms.example.dummyapplication;
 import android.app.Application;
 import android.content.Context;
 
-import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.huawei.hms.feature.dynamicinstall.FeatureCompat;
 

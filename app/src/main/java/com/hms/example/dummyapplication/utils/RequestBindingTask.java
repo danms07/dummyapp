@@ -1,4 +1,4 @@
-package com.hms.example.dummyapplication;
+package com.hms.example.dummyapplication.utils;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -8,17 +8,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import org.apache.commons.codec.binary.Hex;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.MessageDigest;
+
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -63,7 +60,7 @@ public class RequestBindingTask extends AsyncTask<Void,Void,String> {
             int code=conn.getResponseCode();
             Log.e("RequestBinding","Code:"+code+"\tMessage: "+conn.getResponseMessage());
             if(code==200){
-                String response=ServerUtilities.Companion.convertStreamToString(conn.getInputStream());
+                String response= ServerUtilities.Companion.convertStreamToString(conn.getInputStream());
                 Log.e("RequestBinding","Response:"+response);
                 JSONObject jsonObject=new JSONObject(response);
                 String deeplink=jsonObject.getJSONObject("reply").getJSONObject("accountLoginAddr").getJSONObject("deepLink").getString("url");

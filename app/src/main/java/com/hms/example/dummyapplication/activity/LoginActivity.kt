@@ -15,9 +15,9 @@ import com.facebook.FacebookException
 import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
 import com.google.android.gms.common.SignInButton
-import com.hms.example.dummyapplication.AccountBindingAsync
-import com.hms.example.dummyapplication.DemoConstants
-import com.hms.example.dummyapplication.LoadingDialog
+import com.hms.example.dummyapplication.utils.AccountBindingAsync
+import com.hms.example.dummyapplication.utils.DemoConstants
+import com.hms.example.dummyapplication.utils.LoadingDialog
 import com.hms.example.dummyapplication.R
 import com.huawei.agconnect.auth.*
 import com.huawei.hms.common.ApiException
@@ -45,7 +45,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener,
         hwBtn.setOnClickListener(this)
         findViewById<Button>(R.id.anon).setOnClickListener(this)
         setupGoogleSignIn()
-        loadingDialog=LoadingDialog.createDialog(this)
+        loadingDialog= LoadingDialog.createDialog(this)
         val appLinkIntent = getIntent()
         //val appLinkAction = appLinkIntent.getAction()
         val appLinkData = appLinkIntent.getData()
@@ -127,7 +127,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     private fun postData(uid: String, openId: String) {
-        val task = AccountBindingAsync(uid, openId, this)
+        val task = AccountBindingAsync(
+            uid,
+            openId,
+            this
+        )
         task.execute()
 
     }

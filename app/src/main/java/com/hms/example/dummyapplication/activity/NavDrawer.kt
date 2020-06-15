@@ -21,10 +21,9 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
-import com.hms.example.dummyapplication.DemoConstants
+import com.hms.example.dummyapplication.utils.DemoConstants
 import com.hms.example.dummyapplication.R
-import com.hms.example.dummyapplication.RunnableTask
+import com.hms.example.dummyapplication.utils.RunnableTask
 import com.huawei.agconnect.auth.AGConnectAuth
 import com.huawei.agconnect.core.service.auth.TokenSnapshot
 import com.huawei.hmf.tasks.OnSuccessListener

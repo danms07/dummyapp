@@ -8,11 +8,10 @@ import android.os.Handler
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.hms.example.dummyapplication.DemoConstants
+import com.hms.example.dummyapplication.utils.DemoConstants
 import com.hms.example.dummyapplication.R
 import com.huawei.agconnect.auth.AGConnectAuth
 import com.huawei.agconnect.auth.AGConnectUser
-import com.huawei.agconnect.core.service.auth.TokenSnapshot
 import com.huawei.agconnect.crash.AGConnectCrash
 import com.huawei.agconnect.remoteconfig.AGConnectConfig
 

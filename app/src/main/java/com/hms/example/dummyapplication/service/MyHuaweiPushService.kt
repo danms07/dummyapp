@@ -1,4 +1,4 @@
-package com.hms.example.dummyapplication
+package com.hms.example.dummyapplication.service
 
 import android.util.Log
 import com.huawei.hms.push.HmsMessageService

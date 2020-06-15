@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">DummyApplication</string>
+    <string name="app_name" translatable="false">DemoApplication</string>
     <string name="hello">Hello from Deep Link</string>
     <string name="title_activity_nav_drawer">NavDrawer</string>
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
@@ -55,6 +55,6 @@
 
     <string name="fb_login_protocol_scheme" translatable="false">fb537899863809521</string>
     <string name="facebook_app_id" translatable="false">537899863809521</string>
-    <string name="pushAppId">appid=101986057</string>
+    <string name="pushAppId">appid=102405457</string>
     <string name="google_client_id">"551750913679-tpmvq9jb2l3jnqq61q7cbjg0hnqrj9hi.apps.googleusercontent.com"</string>
 </resources>

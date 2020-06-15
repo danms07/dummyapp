@@ -14,12 +14,19 @@
         app:cameraTargetLat="19"
         app:cameraTargetLng="-99"
         app:cameraZoom="8.5"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:mapType="normal"
         app:uiCompass="true"
-        app:uiZoomControls="true" />
+        app:uiZoomControls="true" >
 
+    </com.huawei.hms.maps.MapView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:src="@android:drawable/ic_menu_mylocation"
+        tools:visibility="visible" />
 </FrameLayout>

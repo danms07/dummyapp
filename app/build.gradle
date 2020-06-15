@@ -45,8 +45,9 @@ android {
     buildTypes {
         release {
             signingConfig signingConfigs.release
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            debuggable true
         }
         debug {
             signingConfig signingConfigs.release
@@ -90,7 +91,7 @@ dependencies {
     //api 'com.github.dimorinny:floating-text-button:0.0.4'
     //HMS
     api 'com.huawei.agconnect:agconnect-core:1.3.0.300'
-    api('com.huawei.hms:hwid:4.0.0.300')
+    api'com.huawei.hms:hwid:4.0.4.300'
     api 'com.huawei.hms:hianalytics:4.0.3.300'
     api 'com.huawei.agconnect:agconnect-crash:1.2.1.301'
     api 'com.huawei.agconnect:agconnect-remoteconfig:1.3.0.300'
@@ -98,11 +99,12 @@ dependencies {
     api 'com.huawei.agconnect:agconnect-auth:1.3.0.300'
     api 'com.huawei.hms:dynamicability:1.0.11.302'
     api 'com.huawei.hms:push:4.0.2.300'
-    implementation 'com.huawei.hms:maps:4.0.1.301'
+    api 'com.huawei.hms:maps:4.0.1.301'
     api 'com.huawei.agconnect:agconnect-remoteconfig:1.3.0.300'
     api 'com.huawei.agconnect:agconnect-applinking:1.3.0.300'
     api 'com.huawei.hms:ads-identifier:3.4.28.305'
     api 'com.huawei.hms:opendevice:4.0.1.300'
+    api 'com.huawei.hms:location:4.0.3.303'
 
     implementation 'net.openid:appauth:0.7.1'
     implementation 'com.squareup.okio:okio:1.14.1'

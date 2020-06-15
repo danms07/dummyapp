@@ -1,4 +1,4 @@
-package com.hms.example.dummyapplication
+package com.hms.example.dummyapplication.utils
 
 import android.content.Context
 import android.text.TextUtils
@@ -13,7 +13,7 @@ class RunnableTask(val context: Context):Runnable{
             val pushtoken = HmsInstanceId.getInstance(context).getToken(appId, "HCM")
             if (!TextUtils.isEmpty(pushtoken)) {
                 Log.i("GetToken", "push token:$pushtoken")
-                val listener:RunnableTaskListener=context as RunnableTaskListener
+                val listener: RunnableTaskListener =context as RunnableTaskListener
                 listener.onTokenFetched(pushtoken)
             }
         } catch (e: Exception) {

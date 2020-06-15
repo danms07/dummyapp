@@ -1,8 +1,9 @@
-package com.hms.example.dummyapplication
+package com.hms.example.dummyapplication.utils
 
 import androidx.appcompat.app.AlertDialog
 import android.content.Context
 import android.view.LayoutInflater
+import com.hms.example.dummyapplication.R
 
 class LoadingDialog  {
     companion object{

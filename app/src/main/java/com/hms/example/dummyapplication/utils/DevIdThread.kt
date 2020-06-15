@@ -1,20 +1,15 @@
-package com.hms.example.dummyapplication
+package com.hms.example.dummyapplication.utils
 
 import android.content.Context
-import android.util.Log
-import com.huawei.hmf.tasks.OnFailureListener
-import com.huawei.hmf.tasks.OnSuccessListener
-import com.huawei.hmf.tasks.Task
 import com.huawei.hms.aaid.HmsInstanceId
-import com.huawei.hms.aaid.entity.AAIDResult
 import com.huawei.hms.ads.identifier.AdvertisingIdClient
 
 
-class DevIdThread (val context: Context,val listener: DevIdThreadListener, val which:Int): Thread() {
+class DevIdThread (val context: Context, val listener: DevIdThreadListener, val which:Int): Thread() {
 
     override fun run(){
         when(which){
-            AAID->{
+            AAID ->{
                 val  inst = HmsInstanceId.getInstance(context)
                 //Method 1
                 val aaid = inst.id
@@ -27,7 +22,7 @@ class DevIdThread (val context: Context,val listener: DevIdThreadListener, val w
                 }.addOnFailureListener { e -> Log.d("AAID", "getAAID failure:$e") }
                 */
             }
-            OAID->{
+            OAID ->{
                 val info = AdvertisingIdClient.getAdvertisingIdInfo(context)
                 if (null != info) {
                     listener.onOAId(info.id, info.isLimitAdTrackingEnabled)

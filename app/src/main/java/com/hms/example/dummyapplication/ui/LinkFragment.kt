@@ -12,7 +12,6 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.hms.example.dummyapplication.R
 import com.huawei.agconnect.applinking.AppLinking
-import com.huawei.agconnect.applinking.AppLinking.AndroidLinkInfo
 
 class LinkFragment : Fragment(), View.OnClickListener {
     lateinit var nameText:EditText
@@ -37,12 +36,12 @@ class LinkFragment : Fragment(), View.OnClickListener {
         val builder =
             AppLinking.Builder().setUriPrefix("https://dummyapp.dre.agconnect.link")
                 .setDeepLink(Uri.parse("https://dummyapp.com/target?name=$name"))
-                .setAndroidLinkInfo(AndroidLinkInfo.Builder().build())
                 /*.setSocialCardInfo(//Optional
                     SocialCardInfo.Builder().setTitle("Dummy App")
                         .setImageUrl("https://example.com/1.png").setDescription("Description")
                         .build()
                 )*/
+        //Generate a long link
         val applinkgUri = builder.buildAppLinking().uri
         //Generate a short link
         val shortBuilder = AppLinking.Builder()

@@ -1,4 +1,4 @@
-package com.hms.example.dummyapplication;
+package com.hms.example.dummyapplication.utils;
 
 import android.os.AsyncTask;
 import android.util.Log;

@@ -1,4 +1,4 @@
-package com.hms.example.dummyapplication
+package com.hms.example.dummyapplication.utils
 
 import org.json.JSONObject
 import java.io.*

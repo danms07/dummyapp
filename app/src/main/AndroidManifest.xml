@@ -16,19 +16,23 @@
     <!-- To get the IMEI, the unique user ID, from the user phone. -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+
     <uses-permission android:name="com.huawei.appmarket.service.commondata.permission.GET_COMMON_DATA"/>
 
 
     <application
-        android:allowBackup="true"
-        android:name=".MyApplication"
+        android:allowBackup="false"
+        android:name="com.hms.example.dummyapplication.MyApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activity.LoginActivity"
+            android:name="com.hms.example.dummyapplication.activity.LoginActivity"
             android:label="LogIn">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -77,7 +81,7 @@
         <!--########################################################################################-->
 
         <service
-            android:name=".MyHuaweiPushService"
+            android:name="com.hms.example.dummyapplication.service.MyHuaweiPushService"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -93,10 +97,10 @@
         </meta-data>
 
         <activity
-            android:name=".activity.NavDrawer"
+            android:name="com.hms.example.dummyapplication.activity.NavDrawer"
             android:label="@string/title_activity_nav_drawer"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.TargetActivity">
+        <activity android:name="com.hms.example.dummyapplication.activity.TargetActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -109,23 +113,13 @@
                     android:path="/target" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.MainActivity">
+
+        <activity android:name="com.hms.example.dummyapplication.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:scheme="http"
-                    android:host="mylink.com"
-                    android:path="/target1" />
-            </intent-filter>
         </activity>
 
         <activity android:name="net.openid.appauth.RedirectUriReceiverActivity">

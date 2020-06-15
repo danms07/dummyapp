@@ -4,7 +4,11 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 29
-
+    buildTypes{
+        release{
+            debuggable true
+        }
+    }
 
     defaultConfig {
         minSdkVersion 27
