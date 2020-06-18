@@ -41,6 +41,7 @@ public class GPS(val context: Context) : LocationCallback() {
                         TAG,
                         "requestLocationUpdatesWithCallback onSuccess"
                     )
+                    isStarted=true
                 }
                     .addOnFailureListener{ e ->
                         Log.e(
@@ -65,6 +66,7 @@ public class GPS(val context: Context) : LocationCallback() {
         try {
             fusedLocationProviderClient.removeLocationUpdates(this)
                 .addOnSuccessListener{
+                    isStarted=false
                     Log.i(
                         TAG,
                         "removeLocationUpdatesWithCallback onSuccess"
@@ -82,7 +84,7 @@ public class GPS(val context: Context) : LocationCallback() {
     }
 
     override fun onLocationResult(locationResult: LocationResult?) {
-        isStarted=true
+
         if (locationResult != null) {
             val locations: List<Location> = locationResult.locations
             val lastLocation=locationResult.lastLocation

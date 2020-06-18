@@ -34,7 +34,7 @@ class LinkFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         val name=nameText.text.toString()
         val builder =
-            AppLinking.Builder().setUriPrefix("https://dummyapp.dre.agconnect.link")
+            AppLinking.Builder().setUriPrefix("https://dummyappdemo.dre.agconnect.link")
                 .setDeepLink(Uri.parse("https://dummyapp.com/target?name=$name"))
                 /*.setSocialCardInfo(//Optional
                     SocialCardInfo.Builder().setTitle("Dummy App")

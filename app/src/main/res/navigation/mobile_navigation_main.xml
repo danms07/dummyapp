@@ -72,4 +72,11 @@
         android:name="com.hms.example.dummyapplication.ui.MapFragment"
         android:label="@string/menu_map"
         tools:layout="@layout/fragment_map"/>
+
+    <fragment
+        android:id="@+id/drive"
+        android:name="com.hms.example.dummyapplication.ui.DriveFragment"
+        android:label="@string/menu_drive"
+        tools:layout="@layout/fragment_drive"/>
+
 </navigation>

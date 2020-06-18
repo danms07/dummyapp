@@ -88,6 +88,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener, GPS.On
 
     override fun onPause() {
         mMapView.onPause()
+
         super.onPause()
     }
 
@@ -96,12 +97,19 @@ class MapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener, GPS.On
         mMapView.onResume()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        if(gps.isStarted){
+            gps.removeLocationUpdatesWithCallback()
+        }
+    }
+
     override fun onClick(v: View?) {
         if(checkLocationPermissions()){
             if(gps.isStarted){
-                val update=CameraUpdateFactory.newLatLngZoom(currentLocation, 1.0f)
+                val update=CameraUpdateFactory.newLatLngZoom(currentLocation, 3.0f)
                 hMap.animateCamera(update)
-            }
+            }else gps.startLocationsRequest()
         } else requestLocationPermissions()
     }
 
@@ -116,7 +124,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener, GPS.On
     }
 
     private fun checkLocationPermissions(): Boolean {
-        val location=ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+        val location:Int =ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) or ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
         val backgroundLocation=ContextCompat.checkSelfPermission(requireContext(),Manifest.permission.ACCESS_BACKGROUND_LOCATION)
         if(location==PackageManager.PERMISSION_GRANTED&&backgroundLocation==PackageManager.PERMISSION_GRANTED) return true
         return false

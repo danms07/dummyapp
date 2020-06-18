@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.hms.example.dummyapplication.R
+import com.hms.example.dummyapplication.utils.LoadingDialog
 import com.huawei.agconnect.function.AGCFunctionException
 import com.huawei.agconnect.function.AGConnectFunction
 import com.huawei.agconnect.function.FunctionResult
@@ -27,6 +28,7 @@ class CloudFunctionFragment : Fragment(), View.OnClickListener, OnCompleteListen
     private lateinit var cloudFunctionViewModel: CloudFunctionViewModel
     lateinit var n1: EditText
     lateinit var n2: EditText
+    lateinit var loadDialog: AlertDialog
     val TAG = "CloudFunction"
 
     override fun onCreateView(
@@ -62,8 +64,10 @@ class CloudFunctionFragment : Fragment(), View.OnClickListener, OnCompleteListen
                     dialogInterface.dismiss()
                 }
                 builder.create().show()
-
+                return
             }
+            loadDialog=LoadingDialog.createDialog(requireContext())
+            loadDialog.show()
             val map: HashMap<String, Int> = HashMap()
             val number1 = Integer.parseInt(n1String)
             val number2 = Integer.parseInt(n2String)
@@ -76,7 +80,8 @@ class CloudFunctionFragment : Fragment(), View.OnClickListener, OnCompleteListen
     }
 
     override fun onComplete(task: Task<FunctionResult>?) {
-
+        if(loadDialog.isShowing)
+            loadDialog.dismiss()
         if (task != null) {
             if (task.isSuccessful) {
                 val value = task.result.value
@@ -87,6 +92,11 @@ class CloudFunctionFragment : Fragment(), View.OnClickListener, OnCompleteListen
                     cloudFunctionViewModel.setText(message)
                 } catch (e: JSONException) {
                     Log.e(TAG, e.toString())
+                    val n1String = n1.text.toString()
+                    val n2String = n2.text.toString()
+                    val sum=Integer.parseInt(n1String)+Integer.parseInt(n2String)
+                    val message = "Result: $sum"
+                    cloudFunctionViewModel.setText(message)
                 }
 
             } else {

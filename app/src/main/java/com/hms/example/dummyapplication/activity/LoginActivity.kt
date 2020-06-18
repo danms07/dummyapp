@@ -15,17 +15,16 @@ import com.facebook.FacebookException
 import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
 import com.google.android.gms.common.SignInButton
+import com.hms.example.dummyapplication.R
 import com.hms.example.dummyapplication.utils.AccountBindingAsync
 import com.hms.example.dummyapplication.utils.DemoConstants
 import com.hms.example.dummyapplication.utils.LoadingDialog
-import com.hms.example.dummyapplication.R
 import com.huawei.agconnect.auth.*
 import com.huawei.hms.common.ApiException
 import com.huawei.hms.support.hwid.HuaweiIdAuthManager
 import com.huawei.hms.support.hwid.request.HuaweiIdAuthParams
 import com.huawei.hms.support.hwid.request.HuaweiIdAuthParamsHelper
 import net.openid.appauth.*
-
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener,
     AccountBindingAsync.OnAccountBindListener {
@@ -154,6 +153,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener,
                         .setAccessToken()
                         .createParams()
 
+
                 val mAuthManager = HuaweiIdAuthManager.getService(this, mAuthParam)
                 startActivityForResult(
                     mAuthManager.signInIntent,
@@ -195,13 +195,15 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener,
         }
     }
 
+
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == HWID_SIGN_IN) {
             //Huawei login success
             val authHuaweiIdTask = HuaweiIdAuthManager.parseAuthResultFromIntent(data)
             if (authHuaweiIdTask.isSuccessful) {
-                val huaweiAccount = authHuaweiIdTask.result
+                val huaweiAccount = authHuaweiIdTask.result//
                 val accessToken = huaweiAccount.accessToken
                 val credential = HwIdAuthProvider.credentialWithToken(accessToken)
                 AGConnectAuth.getInstance().signIn(credential).addOnSuccessListener {

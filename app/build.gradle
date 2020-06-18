@@ -21,7 +21,7 @@ android {
         applicationId "com.hms.example.dummyapplication"
         minSdkVersion 27
         targetSdkVersion 29
-        versionCode 4
+        versionCode 5
         versionName "1.1.2"
         manifestPlaceholders = [
                 'appAuthRedirectScheme': 'com.googleusercontent.apps.PREFIX'
@@ -105,6 +105,9 @@ dependencies {
     api 'com.huawei.hms:ads-identifier:3.4.28.305'
     api 'com.huawei.hms:opendevice:4.0.1.300'
     api 'com.huawei.hms:location:4.0.3.303'
+    api 'com.huawei.hms:drive:4.0.3.300'
+
+
 
     implementation 'net.openid:appauth:0.7.1'
     implementation 'com.squareup.okio:okio:1.14.1'

@@ -29,6 +29,12 @@
             android:id="@+id/map"
             android:title="@string/menu_map"
             />
+
+        <item
+            android:id="@+id/drive"
+            android:title="@string/menu_drive"
+            />
+
     </group>
 
     <!--<group android:checkableBehavior="single">

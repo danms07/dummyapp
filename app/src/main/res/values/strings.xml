@@ -13,6 +13,7 @@
     <string name="menu_map">Map</string>
     <string name="menu_remote">Remote</string>
     <string name="menu_crash">Crash</string>
+    <string name="menu_drive">Drive</string>
 
     <string name="fb_login">Continue with Facebook</string>
 
@@ -51,10 +52,12 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="attention">Attention</string>
     <string name="cf_message">Please provide two numbers to sum</string>
+    <string name="user_info">Obtaining Information</string>
+    <string name="user_files">Obtaining File List</string>
+    <string name="Download">Download</string>
 
-
-    <string name="fb_login_protocol_scheme" translatable="false">fb537899863809521</string>
-    <string name="facebook_app_id" translatable="false">537899863809521</string>
-    <string name="pushAppId">appid=102405457</string>
-    <string name="google_client_id">"551750913679-tpmvq9jb2l3jnqq61q7cbjg0hnqrj9hi.apps.googleusercontent.com"</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb</string>
+    <string name="facebook_app_id" translatable="false">fb</string>
+    <string name="pushAppId">appid=APP_ID</string>
+    <string name="google_client_id">CLIENT_ID</string>
 </resources>
