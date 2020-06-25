@@ -27,7 +27,7 @@
     <string name="cancel">Cancel</string>
     <string name="logout">Log Out</string>
     <string name="home_second">Home Second</string>
-    <string name="title_dynamicfeature1">DemoFeature</string>
+    <string name="title_dynamicfeature1">dynamicfeature1</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="app_link_builder">App Link Builder</string>
