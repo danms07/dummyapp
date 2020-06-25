@@ -7,15 +7,16 @@ import com.huawei.hms.push.RemoteMessage
 class MyHuaweiPushService: HmsMessageService() {
     override fun onNewToken(p0: String?) {
         super.onNewToken(p0)
+        Log.e("onNewToken",p0)
     }
 
     override fun onMessageReceived(message: RemoteMessage?) {
-        super.onMessageReceived(message)
+        //super.onMessageReceived(message)
         if(message!=null){
-            Log.e("OnNewMessage",message.data)
+            Log.i("OnNewMessage",message.data)
             val map=message.dataOfMap
             for( key in map.keys){
-                Log.e("onNewMessage",map[key])
+                Log.e("onNewMessage",map[key]!!)
             }
         }
     }

@@ -18,9 +18,11 @@ public class TargetActivity extends AppCompatActivity implements OnSuccessListen
     private static final int  DEFINED_CODE=10;
     private static final int REQUEST_CODE_SCAN = 100;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i("Target","onCreate");
         setContentView(R.layout.activity_target);
         // ATTENTION: This was auto-generated to handle app links.
         Intent appLinkIntent = getIntent();
@@ -28,12 +30,14 @@ public class TargetActivity extends AppCompatActivity implements OnSuccessListen
         String name;
         Uri appLinkData = appLinkIntent.getData();
         if(appLinkData!=null){
+            Log.i("Target",appLinkData.toString());
             name=appLinkData.getQueryParameter("name");
             if(name!=null&&!name.equals("")){
                 TextView textView=findViewById(R.id.targetText);
                 String message="Hello "+name;
                 textView.setText(message);
             }
+
         }
 
         AGConnectAppLinking.getInstance().getAppLinking(getIntent()).addOnSuccessListener(this).addOnFailureListener(e -> {

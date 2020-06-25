@@ -23,7 +23,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.hms.example.dummyapplication.utils.DemoConstants
 import com.hms.example.dummyapplication.R
-import com.hms.example.dummyapplication.utils.RunnableTask
+import com.hms.example.dummyapplication.utils.TokenTask
 import com.huawei.agconnect.auth.AGConnectAuth
 import com.huawei.agconnect.core.service.auth.TokenSnapshot
 import com.huawei.hmf.tasks.OnSuccessListener
@@ -40,13 +40,14 @@ import com.huawei.hms.feature.tasks.listener.OnFeatureCompleteListener
 
 
 class NavDrawer : AppCompatActivity(),
-    RunnableTask.RunnableTaskListener, InstallStateListener,
+    TokenTask.TokenTaskListener, InstallStateListener,
     OnSuccessListener<AAIDResult>, View.OnClickListener {
 
     private val TAG = "NavDrawer"
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var fab: FloatingActionButton
-    private lateinit var mFeatureInstallManager:FeatureInstallManager
+    private var mFeatureInstallManager:FeatureInstallManager?=null
+    private var sessionId=1000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -120,7 +121,24 @@ class NavDrawer : AppCompatActivity(),
 
     fun getToken() {
         Log.e("MainActivity", "get token: begin")
-        Thread(RunnableTask(this)).start()
+        Thread(TokenTask(this)).start()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mFeatureInstallManager?.registerInstallListener(this)
+        val intent=intent
+        val bundle=intent.extras
+        if(bundle!=null){
+            for(key in bundle.keySet())
+                Log.e(TAG,"$key ${bundle.get(key)}")
+        }
+
+    }
+
+    override fun onPause() {
+        mFeatureInstallManager?.unregisterInstallListener(this)
+        super.onPause()
     }
 
 
@@ -131,27 +149,26 @@ class NavDrawer : AppCompatActivity(),
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.features) {
-        }
-        if(item.itemId==R.id.settings){
-
-        }
         when(item.itemId){
             R.id.features->{
                 mFeatureInstallManager = FeatureInstallManagerFactory.create(this);
-                val moduleNames: Set<String> = mFeatureInstallManager.allInstalledModules
+                val moduleNames: Set<String> = mFeatureInstallManager?.allInstalledModules!!
+                //Check for all installed features
+                for(feature in moduleNames){
+                    Log.e(TAG,"Feature: $feature")
+                }
                 val featureId = getString(R.string.title_dynamicfeature1)
                 if (featureId in moduleNames) {
                     //Feature is intstalled
-                    val intent = Intent("com.hms.example.dynamicfeature1.DemoActivity")
+                    val intent = Intent(this,Class.forName("com.hms.example.dynamicfeature1.DemoActivity"))
                     startActivity(intent)
                 } else {
                     //Display Request Dialog
                     val request = FeatureInstallRequest.newBuilder()
                         .addModule(featureId).build()
-                    val task = mFeatureInstallManager.installFeature(request)
-                    var sessionId: Int = 0
-                    task.addOnListener(object : OnFeatureCompleteListener<Int>() {
+                    val task = mFeatureInstallManager?.installFeature(request)
+
+                    task?.addOnListener(object : OnFeatureCompleteListener<Int>() {
                         override fun onComplete(featureTask: FeatureTask<Int>) {
                             if (featureTask.isComplete) {
                                 Log.d(TAG, "complete to start install.")
@@ -168,7 +185,7 @@ class NavDrawer : AppCompatActivity(),
                             }
                         }
                     })
-                    mFeatureInstallManager.registerInstallListener(this)
+                    mFeatureInstallManager?.registerInstallListener(this)
                 }
             }
             R.id.settings->{
@@ -196,7 +213,7 @@ class NavDrawer : AppCompatActivity(),
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    override fun onTokenFetched(token: String) {
+    override fun onToken(token: String) {
         Log.e("Token", token)
         //fetching AAID
         val inst = HmsInstanceId.getInstance(this)
@@ -210,20 +227,18 @@ class NavDrawer : AppCompatActivity(),
         //Verifying User Authorization
         if (state?.status() == FeatureInstallSessionStatus.REQUIRES_USER_CONFIRMATION) {
             try {
-                // Specify the activity.
-                val result = mFeatureInstallManager.triggerUserConfirm(state, this, 1)
+                val result = mFeatureInstallManager?.triggerUserConfirm(state, this, 1)
             } catch (e: SendIntentException) {
                 e.printStackTrace()
             }
         }
-        //Verifying user consent
         if (state?.status() == FeatureInstallSessionStatus.REQUIRES_PERSON_AGREEMENT) {
             try {
                 // Specify the activity.
                 val result =
-                    mFeatureInstallManager.triggerUserConfirm(
+                    mFeatureInstallManager?.triggerUserConfirm(
                         state,
-                        this@NavDrawer, 0
+                        this, 0
                     )
             } catch (e: SendIntentException) {
                 e.printStackTrace()
@@ -234,7 +249,7 @@ class NavDrawer : AppCompatActivity(),
         if (state?.status() == FeatureInstallSessionStatus.DOWNLOADING) {
             val process =
                 ((state.bytesDownloaded() + 0.0) / state.totalBytesToDownload() * 100).toInt()
-            Log.d(TAG, "installed in Downloading :$process")
+            Log.d(TAG, "Downloading progress:$process")
         }
     }
     //AAID on success listener

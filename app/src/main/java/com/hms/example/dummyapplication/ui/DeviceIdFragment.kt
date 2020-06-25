@@ -1,6 +1,7 @@
 package com.hms.example.dummyapplication.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -58,12 +59,14 @@ class DeviceIdFragment : Fragment(), View.OnClickListener, DevIdThread.DevIdThre
     override fun onAAId(aaid: String) {
         activity?.runOnUiThread{
             aaidText.text=aaid
+            Log.e("AAID",aaid)
         }
     }
 
     override fun onOAId(oaid: String, isLimitAdTrackingEnabled: Boolean) {
         activity?.runOnUiThread{
             oaidText.text=oaid
+            Log.e("OAID",oaid)
             if(isLimitAdTrackingEnabled){
                 Snackbar.make(oaidText,"Limit Ad Tracking Enabled",Snackbar.LENGTH_SHORT).show()
             }else{

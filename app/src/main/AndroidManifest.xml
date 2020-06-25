@@ -17,26 +17,31 @@
     <!-- To get the IMEI, the unique user ID, from the user phone. -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission
         android:name="android.permission.WRITE_MEDIA_STORAGE"
         tools:ignore="ProtectedPermissions" />
 
-    <uses-permission android:name="com.huawei.appmarket.service.commondata.permission.GET_COMMON_DATA"/>
+    <uses-permission android:name="com.huawei.appmarket.service.commondata.permission.GET_COMMON_DATA" />
 
 
     <application
-        android:allowBackup="false"
         android:name="com.hms.example.dummyapplication.MyApplication"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="push_kit_auto_init_enabled"
+            android:value="true" />
+
         <activity
             android:name="com.hms.example.dummyapplication.activity.LoginActivity"
             android:label="LogIn">
@@ -47,9 +52,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="https"
                     android:host="dummyapp.com"
-                    android:path="/login" />
+                    android:path="/login"
+                    android:scheme="https" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -58,9 +63,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="dummyapp"
                     android:host="dummyapp.com"
-                    android:path="/login" />
+                    android:path="/login"
+                    android:scheme="dummyapp" />
             </intent-filter>
         </activity>
         <!--########### FACEBOOK LOGIN ##############################################################-->
@@ -94,12 +99,11 @@
                 <action android:name="com.huawei.push.action.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
+        <!-- Replace the value of xxx with the actual app ID applied, sourced from Service Details, HUAWEI Developer. -->
         <meta-data
             android:name="com.huawei.hms.client.appid"
             android:value="@string/pushAppId">
 
-            <!-- Replace the value of xxx with the actual app ID applied, sourced from Service Details, HUAWEI Developer. -->
         </meta-data>
 
         <activity
@@ -114,9 +118,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="https"
                     android:host="dummyapp.com"
-                    android:path="/target" />
+                    android:path="/target"
+                    android:scheme="https" />
             </intent-filter>
 
             <intent-filter>
@@ -126,9 +130,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="dummyapp"
                     android:host="dummyapp.com"
-                    android:path="/target" />
+                    android:path="/target"
+                    android:scheme="dummyapp" />
             </intent-filter>
         </activity>
 
@@ -142,12 +146,12 @@
 
         <activity android:name="net.openid.appauth.RedirectUriReceiverActivity">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="com.hms.example.dummyapplication"/>
+                <data android:scheme="com.hms.example.dummyapplication" />
             </intent-filter>
         </activity>
     </application>
