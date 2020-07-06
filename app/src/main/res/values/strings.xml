@@ -55,6 +55,7 @@
     <string name="user_info">Obtaining Information</string>
     <string name="user_files">Obtaining File List</string>
     <string name="Download">Download</string>
+    <string name="menu_ads">Ads</string>
 
     <string name="fb_login_protocol_scheme" translatable="false">fb</string>
     <string name="facebook_app_id" translatable="false">fb</string>
