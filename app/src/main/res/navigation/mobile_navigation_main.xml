@@ -79,4 +79,10 @@
         android:label="@string/menu_drive"
         tools:layout="@layout/fragment_drive"/>
 
+    <fragment
+        android:id="@+id/ads"
+        android:name="com.hms.example.dummyapplication.ui.AdsFragment"
+        android:label="@string/menu_ads"
+        tools:layout="@layout/fragment_ads"/>
+
 </navigation>

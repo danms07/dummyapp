@@ -4,11 +4,11 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.hms.example.dummyapplication.R
 import com.hms.example.dummyapplication.utils.GPS
@@ -16,11 +16,20 @@ import com.huawei.hms.maps.CameraUpdateFactory
 import com.huawei.hms.maps.HuaweiMap
 import com.huawei.hms.maps.MapView
 import com.huawei.hms.maps.OnMapReadyCallback
-import com.huawei.hms.maps.model.CameraPosition
 import com.huawei.hms.maps.model.LatLng
+import com.huawei.hms.maps.model.PointOfInterest
 import com.huawei.hms.maps.model.PolygonOptions
+import com.huawei.hms.site.api.SearchResultListener
+import com.huawei.hms.site.api.SearchServiceFactory
+import com.huawei.hms.site.api.model.DetailSearchRequest
+import com.huawei.hms.site.api.model.DetailSearchResponse
+import com.huawei.hms.site.api.model.SearchStatus
+import com.huawei.hms.site.api.model.Site
+import java.net.URLEncoder
 
-class MapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener, GPS.OnGPSEventListener {
+
+class MapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener, GPS.OnGPSEventListener,
+    HuaweiMap.OnPoiClickListener {
 
     private lateinit var hMap: HuaweiMap
 
@@ -60,6 +69,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener, GPS.On
         Log.d(TAG, "onMapReady: ")
         if (map != null) {
             hMap = map
+            hMap.setOnPoiClickListener(this)
             val options= PolygonOptions()
             val p1= LatLng(19.0,-99.0)
             val p2= LatLng(19.4261064,-99.1285141)
@@ -155,5 +165,37 @@ class MapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener, GPS.On
         if(gps.isStarted){
             gps.removeLocationUpdatesWithCallback()
         }
+    }
+
+    override fun onPoiClick(poi: PointOfInterest) {
+        val latLng=poi.latLng
+        val id =poi.placeId
+        val searchService = SearchServiceFactory.create(requireContext(),
+            URLEncoder.encode("CV6vKDxoaSXKhlopIDAKuRANlut2oSNt66X9V69qtRLcbAhiQ8e8j1I/x3SZsjqmcnQM6vE9+KQVTH+myk9gNrBjTjXE", "UTF-8") )
+        val request = DetailSearchRequest()
+        request.setSiteId(id)
+        // Create a search result listener.
+
+        // Create a search result listener.
+        val resultListener =
+            object : SearchResultListener<DetailSearchResponse?> {
+                // Return search results upon a successful search.
+                override fun onSearchResult(result: DetailSearchResponse?) {
+                    var site: Site?=null
+                    if (result == null || result.site.also { site = it } == null) {
+                        return
+                    }
+                    Log.e("SITE","${site?.formatAddress}")
+                }
+
+                // Return the result code and description upon a search exception.
+                override fun onSearchError(status: SearchStatus) {
+                    Log.e(
+                        "TAG",
+                        "Error : " + status.errorCode + " " + status.errorMessage
+                    )
+                }
+            }
+        searchService.detailSearch(request, resultListener)
     }
 }

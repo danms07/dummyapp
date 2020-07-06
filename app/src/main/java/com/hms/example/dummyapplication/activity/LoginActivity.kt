@@ -14,6 +14,7 @@ import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
+import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.SignInButton
 import com.hms.example.dummyapplication.R
 import com.hms.example.dummyapplication.utils.AccountBindingAsync

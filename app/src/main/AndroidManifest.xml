@@ -3,47 +3,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.hms.example.dummyapplication">
     <!-- Camera permission -->
-    <uses-permission android:name="android.permission.CAMERA" />
-    <!-- File reading permission -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <!-- To upgrade HMS through HMS-SDK, OTA server access permission is required. -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!-- HMS upgrade through HMS-SDK. To save a downloaded upgrade package, SD card write permission is required. -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!-- Test network status -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!-- Test wifi status -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!-- To get the IMEI, the unique user ID, from the user phone. -->
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- File reading permission -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- To upgrade HMS through HMS-SDK, OTA server access permission is required. -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- HMS upgrade through HMS-SDK. To save a downloaded upgrade package, SD card write permission is required. -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- Test network status -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- Test wifi status -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- To get the IMEI, the unique user ID, from the user phone. -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission
         android:name="android.permission.WRITE_MEDIA_STORAGE"
         tools:ignore="ProtectedPermissions" />
-
     <uses-permission android:name="com.huawei.appmarket.service.commondata.permission.GET_COMMON_DATA" />
 
-
     <application
-        android:name="com.hms.example.dummyapplication.MyApplication"
+        android:name=".MyApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".activity.AdsActivity"
+            >
+            
+        </activity>
+        <activity android:name=".activity.QuestionActivity" /> <!-- Push Kit Auto Enabled -->
         <meta-data
             android:name="push_kit_auto_init_enabled"
-            android:value="true" />
+            android:value="true" /> <!-- APM -->
+        <!-- Set this flag to 'true', debug logs of APM will be printed in logcat, default value is 'false' -->
+        <meta-data
+            android:name="apms_debug_log_enabled"
+            android:value="false" />
 
         <activity
-            android:name="com.hms.example.dummyapplication.activity.LoginActivity"
+            android:name=".activity.LoginActivity"
             android:label="LogIn">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -67,8 +66,7 @@
                     android:path="/login"
                     android:scheme="dummyapp" />
             </intent-filter>
-        </activity>
-        <!--########### FACEBOOK LOGIN ##############################################################-->
+        </activity> <!-- ########### FACEBOOK LOGIN ############################################################## -->
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -88,29 +86,24 @@
 
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
-        </activity>
-        <!--########################################################################################-->
-
+        </activity> <!-- ######################################################################################## -->
         <service
-            android:name="com.hms.example.dummyapplication.service.MyHuaweiPushService"
+            android:name=".service.MyHuaweiPushService"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.huawei.push.action.MESSAGING_EVENT" />
             </intent-filter>
-        </service>
-        <!-- Replace the value of xxx with the actual app ID applied, sourced from Service Details, HUAWEI Developer. -->
+        </service> <!-- Replace the value of xxx with the actual app ID applied, sourced from Service Details, HUAWEI Developer. -->
         <meta-data
             android:name="com.huawei.hms.client.appid"
-            android:value="@string/pushAppId">
-
-        </meta-data>
+            android:value="@string/pushAppId" />
 
         <activity
-            android:name="com.hms.example.dummyapplication.activity.NavDrawer"
+            android:name=".activity.NavDrawer"
             android:label="@string/title_activity_nav_drawer"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="com.hms.example.dummyapplication.activity.TargetActivity">
+        <activity android:name=".activity.TargetActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -122,7 +115,6 @@
                     android:path="/target"
                     android:scheme="https" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -135,15 +127,13 @@
                     android:scheme="dummyapp" />
             </intent-filter>
         </activity>
-
-        <activity android:name="com.hms.example.dummyapplication.activity.MainActivity">
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-
         <activity android:name="net.openid.appauth.RedirectUriReceiverActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

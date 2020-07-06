@@ -1,7 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-
+//APM
+apply plugin: 'com.huawei.agconnect.apms'
 apply plugin: 'com.huawei.agconnect'
 agcp {
     mappingUpload = true
@@ -48,10 +49,17 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             debuggable true
+
+            resValue "string","ad_id","formal ad slot ID"
+            resValue "string","ad_id2","formal ad slot ID"
+            resValue "string","ad_id3","formal ad slot ID"
         }
         debug {
             signingConfig signingConfigs.release
             debuggable true
+            resValue "string","ad_id","testw6vs28auh3"
+            resValue "string","ad_id2","testw6vs28auh3"
+            resValue "string","ad_id3","testw6vs28auh3"
         }
     }
 
@@ -106,20 +114,23 @@ dependencies {
     api 'com.huawei.hms:opendevice:4.0.1.300'
     api 'com.huawei.hms:location:4.0.3.303'
     api 'com.huawei.hms:drive:4.0.3.300'
-
+    api 'com.huawei.agconnect:agconnect-apms:1.2.1.301'
+    //Ads Kit
+    api 'com.huawei.hms:ads-lite:13.4.30.307'
+    api 'com.huawei.hms:ads-consent:3.4.30.307'
+    //site kit
+    api 'com.huawei.hms:site:5.0.0.300'
 
 
     implementation 'net.openid:appauth:0.7.1'
     implementation 'com.squareup.okio:okio:1.14.1'
-
     /*api ('org.apache.httpcomponents:httpmime:4.5.12'){
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }*/
-
-
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.google.android.gms:play-services-auth:18.0.0'
+    //implementation 'com.google.android.gms:play-services-auth:18.0.0'
+    implementation "com.google.android.gms:play-services-base:17.3.0"
 }

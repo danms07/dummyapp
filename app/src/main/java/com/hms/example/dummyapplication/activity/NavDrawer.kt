@@ -29,6 +29,7 @@ import com.huawei.agconnect.core.service.auth.TokenSnapshot
 import com.huawei.hmf.tasks.OnSuccessListener
 import com.huawei.hms.aaid.HmsInstanceId
 import com.huawei.hms.aaid.entity.AAIDResult
+import com.huawei.hms.ads.HwAds
 import com.huawei.hms.feature.install.FeatureInstallManager
 import com.huawei.hms.feature.install.FeatureInstallManagerFactory
 import com.huawei.hms.feature.listener.InstallStateListener
@@ -64,6 +65,7 @@ class NavDrawer : AppCompatActivity(),
             displayName.text=intent.getStringExtra(DemoConstants.DISPLAY_NAME)
         }
         else displayName.text=getString(R.string.anonymous)
+
         if(intent.hasExtra(DemoConstants.USER_ID)){
             userId.text=intent.getStringExtra(DemoConstants.USER_ID)
         }
@@ -86,7 +88,8 @@ class NavDrawer : AppCompatActivity(),
                 R.id.deviceId,
                 R.id.AccountBind,
                 R.id.map,
-                R.id.drive
+                R.id.drive,
+                R.id.ads
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

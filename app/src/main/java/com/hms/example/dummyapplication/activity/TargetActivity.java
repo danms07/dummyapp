@@ -29,21 +29,45 @@ public class TargetActivity extends AppCompatActivity implements OnSuccessListen
         String appLinkAction = appLinkIntent.getAction();
         String name;
         Uri appLinkData = appLinkIntent.getData();
+        TextView textView=findViewById(R.id.targetText);
+
         if(appLinkData!=null){
             Log.i("Target",appLinkData.toString());
             name=appLinkData.getQueryParameter("name");
             if(name!=null&&!name.equals("")){
-                TextView textView=findViewById(R.id.targetText);
+
                 String message="Hello "+name;
                 textView.setText(message);
             }
+            //probando con 2 array estaticos
+            int[] array1 = {1,2,3,4,5};
+            int[] array2 = {2,2,2,2,2,2};
 
+            if(array1.length<array2.length){ //entonces array1 sera el array invertido
+
+                //el array invertido será del tamaño del array inicial mas largo
+                int[] arrayinvertido = new int[array2.length];
+
+                //invirtiendo el array
+                for (int i = array1.length - 1; i >= 0; i--) {
+                    arrayinvertido[array1.length-i-1] = array1[i];
+                }
+
+                //mostrando el array invertido
+                StringBuilder sb=new StringBuilder();
+                for (int value : arrayinvertido) {
+                    sb.append(value);
+                }
+                textView.setText(sb.toString());
+            }
         }
 
         AGConnectAppLinking.getInstance().getAppLinking(getIntent()).addOnSuccessListener(this).addOnFailureListener(e -> {
         });
 
     }
+
+
 
 
     @Override

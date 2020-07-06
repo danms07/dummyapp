@@ -35,6 +35,10 @@
             android:title="@string/menu_drive"
             />
 
+        <item
+            android:id="@+id/ads"
+            android:title="@string/menu_ads"/>
+
     </group>
 
     <!--<group android:checkableBehavior="single">

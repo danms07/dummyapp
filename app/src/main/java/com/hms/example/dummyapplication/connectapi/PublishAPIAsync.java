@@ -1,7 +1,9 @@
 package com.hms.example.dummyapplication.connectapi;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -23,6 +25,22 @@ public class PublishAPIAsync extends AsyncTask <Void,String,Integer> {
 
     @Override
     protected Integer doInBackground(Void... voids) {
+        String data="{\"0\":{\"0\":\"13\"},\"1\":{\"0\":\"23\"},\"2\":{\"0\":\"34\"},\"3\":{\"0\":\"46\"},\"4\":{\"0\":\"57\"}}";
+        try {
+            JSONObject json=new JSONObject(data);
+            int iden;
+
+            for (int i = 0; i < json.length(); i++) {
+
+                JSONObject ide = json.getJSONObject(String.valueOf(i));
+                iden= ide.getInt("0");
+                Log.e("JSON",iden+"");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
         ConnectApiHelper helper=new ConnectApiHelper();
         publishProgress("obtaining access token...");
         helper.appRequestAccessToken("https://oauth-login.cloud.huawei.com/oauth2/v2/token","102405457","5a5ec7e12f2246608b625fc96210c0253e272000ff9b4294fcdd7f0c5ece335a");
