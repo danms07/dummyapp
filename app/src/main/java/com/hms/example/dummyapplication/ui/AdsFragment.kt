@@ -7,10 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.hms.example.dummyapplication.R
 import com.hms.example.dummyapplication.utils.MyAdListener
+import com.huawei.hms.ads.AdListener
 import com.huawei.hms.ads.AdParam
 import com.huawei.hms.ads.BannerAdSize
 import kotlinx.android.synthetic.main.fragment_ads.view.*
-
 
 class AdsFragment : Fragment(){
 
@@ -22,6 +22,7 @@ class AdsFragment : Fragment(){
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_ads, container, false)
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
