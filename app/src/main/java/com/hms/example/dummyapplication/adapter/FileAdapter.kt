@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.hms.example.dummyapplication.R
 import com.huawei.cloud.services.drive.model.File
+import kotlinx.android.synthetic.main.file_item.view.*
 
 class FileAdapter (val fileList:ArrayList<File>,private val listener: FileViewHolder.OnFileItemListener):
     RecyclerView.Adapter<FileAdapter.FileViewHolder>(){
@@ -15,9 +16,9 @@ class FileAdapter (val fileList:ArrayList<File>,private val listener: FileViewHo
     class FileViewHolder(private val view: View,val listener:OnFileItemListener): RecyclerView.ViewHolder(view),
         View.OnClickListener {
         fun init(file:File){
-            val fileName=view.findViewById<TextView>(R.id.file_name)
-            val fileSize=view.findViewById<TextView>(R.id.file_size)
-            val downloadBtn=view.findViewById<Button>(R.id.dwn_btn)
+            val fileName=view.file_name
+            val fileSize=view.file_size
+            val downloadBtn=view.dwn_btn
             fileName.text=file.fileName
             //fileSize.text=file.occupiedSpace.toString()
 

@@ -194,7 +194,7 @@ class NavDrawer : AppCompatActivity(),
             R.id.settings->{
                 val intent=Intent()
                 //intent.component = ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.optimize.process.ProtectActivity")
-                intent.component = ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.startupmgr.ui.StartupNormalAppListActivity")
+                intent.component = ComponentName("com.huawei.appmarket", "com.huawei.appgallery.detail.detailbase.common.activity.AppDetailCommentActivity")
                 try {
                     startActivity(intent)
                 } catch (ex: ActivityNotFoundException) {

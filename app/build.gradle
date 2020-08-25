@@ -22,8 +22,8 @@ android {
         applicationId "com.hms.example.dummyapplication"
         minSdkVersion 27
         targetSdkVersion 29
-        versionCode 7
-        versionName "1.1.4"
+        versionCode 8
+        versionName "1.1.5"
         manifestPlaceholders = [
                 'appAuthRedirectScheme': 'com.googleusercontent.apps.PREFIX'
         ]
@@ -58,8 +58,8 @@ android {
             signingConfig signingConfigs.release
             debuggable true
             resValue "string","ad_id","testw6vs28auh3"
-            resValue "string","ad_id2","testw6vs28auh3"
-            resValue "string","ad_id3","testw6vs28auh3"
+            resValue "string","ad_id2","testu7m3hc4gvm"
+            resValue "string","ad_id3","testx9dtjwj8hp"
         }
     }
 
@@ -98,20 +98,20 @@ dependencies {
     //api 'com.google.code.gson:gson:2.8.5'
     //api 'com.github.dimorinny:floating-text-button:0.0.4'
     //HMS
-    api 'com.huawei.agconnect:agconnect-core:1.3.0.300'
-    api'com.huawei.hms:hwid:4.0.4.300'
-    api 'com.huawei.hms:hianalytics:4.0.3.300'
+    api 'com.huawei.agconnect:agconnect-core:1.4.0.300'
+    api'com.huawei.hms:hwid:5.0.1.301'
+    api 'com.huawei.hms:hianalytics:5.0.1.301'
     api 'com.huawei.agconnect:agconnect-crash:1.2.1.301'
     api 'com.huawei.agconnect:agconnect-remoteconfig:1.3.0.300'
     api 'com.huawei.agconnect:agconnect-function:1.2.1.301'
     api 'com.huawei.agconnect:agconnect-auth:1.3.0.300'
     api 'com.huawei.hms:dynamicability:1.0.11.302'
     api 'com.huawei.hms:push:4.0.2.300'
-    api 'com.huawei.hms:maps:4.0.1.301'
+    api 'com.huawei.hms:maps:5.0.1.300'
     api 'com.huawei.agconnect:agconnect-remoteconfig:1.3.0.300'
     api 'com.huawei.agconnect:agconnect-applinking:1.3.0.300'
     api 'com.huawei.hms:ads-identifier:3.4.28.305'
-    api 'com.huawei.hms:opendevice:4.0.1.300'
+    api 'com.huawei.hms:opendevice:5.0.0.300'
     api 'com.huawei.hms:location:4.0.3.303'
     api 'com.huawei.hms:drive:4.0.3.300'
     api 'com.huawei.agconnect:agconnect-apms:1.2.1.301'

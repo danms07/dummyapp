@@ -27,7 +27,7 @@
 -keepattributes Signature
 -keepattributes SourceFile,LineNumberTable
 -keep class com.hianalytics.android.**{*;}
--keep class com.huawei.updatesdk.**{*;}
+-keep class com.huawei.updatesdk.**{*;}l
 -keep class com.huawei.hms.**{*;}
 -keep class com.huawei.gamebox.plugin.gameservice.**{*;}
 -keep interface com.huawei.hms.analytics.type.HAEventType{*;}
@@ -38,3 +38,8 @@
 }
 -keep class com.huawei.hms.analytics.HiAnalyticsInstance{*;}
 -keep class com.huawei.hms.analytics.HiAnalytics{*;}
+-keep class com.huawei.agconnect.apms.**{*;}
+-dontwarn com.huawei.agconnect.apms.**
+-keep class com.huawei.openalliance.ad.** { *; }
+-keep class com.huawei.hms.ads.** { *; }
+-keepattributes Exceptions, Signature, InnerClasses, LineNumberTable

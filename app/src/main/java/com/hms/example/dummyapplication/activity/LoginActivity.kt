@@ -5,7 +5,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -13,25 +12,27 @@ import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginResult
-import com.facebook.login.widget.LoginButton
-import com.google.android.gms.common.GoogleApiAvailability
-import com.google.android.gms.common.SignInButton
+import com.google.android.material.snackbar.Snackbar
 import com.hms.example.dummyapplication.R
 import com.hms.example.dummyapplication.utils.AccountBindingAsync
 import com.hms.example.dummyapplication.utils.DemoConstants
 import com.hms.example.dummyapplication.utils.LoadingDialog
+import com.hms.example.dummyapplication.utils.VerifyDialog
 import com.huawei.agconnect.auth.*
+import com.huawei.agconnect.auth.VerifyCodeSettings.ACTION_REGISTER_LOGIN
+import com.huawei.hmf.tasks.Task
 import com.huawei.hms.common.ApiException
 import com.huawei.hms.support.hwid.HuaweiIdAuthManager
 import com.huawei.hms.support.hwid.request.HuaweiIdAuthParams
 import com.huawei.hms.support.hwid.request.HuaweiIdAuthParamsHelper
+import kotlinx.android.synthetic.main.activity_login.*
 import net.openid.appauth.*
 
+
 class LoginActivity : AppCompatActivity(), View.OnClickListener,
-    AccountBindingAsync.OnAccountBindListener {
+    AccountBindingAsync.OnAccountBindListener, VerifyDialog.VerificationListener {
     private val GOOGLE_SIGN_IN: Int = 1001
     val HWID_SIGN_IN = 1003
-    //var hasGooglePlayServices = false
     val TAG = "LoginActivity"
     lateinit var mCallbackManager: CallbackManager
     lateinit var loadingDialog: AlertDialog
@@ -39,29 +40,18 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        val hwBtn: Button = findViewById(R.id.hw)
-        val fbBtn: LoginButton = findViewById(R.id.fb)
-        fbBtn.setPermissions("email", "public_profile")
-        hwBtn.setOnClickListener(this)
-        findViewById<Button>(R.id.anon).setOnClickListener(this)
-        setupGoogleSignIn()
-        loadingDialog= LoadingDialog.createDialog(this)
-        val appLinkIntent = getIntent()
-        //val appLinkAction = appLinkIntent.getAction()
-        val appLinkData = appLinkIntent.getData()
-        if (appLinkData != null) {
-            val openId = appLinkData.getQueryParameter("openId")
-            if (openId != null && openId != "") {
-                if (AGConnectAuth.getInstance().currentUser != null) {
-                    val user: AGConnectUser = AGConnectAuth.getInstance().currentUser
-                    Log.e("User", "${user.displayName}\t${user.email}\t${user.uid}\t${user.phone}")
-                    displayDialog(user.displayName, user.uid, openId)
-                }
-
-            }
-        }
+        //Performs the account Binding Logic for Huawei Ability Gallery
+        accountBindingCheck()
+        //Account Buttons Setup
+        fb.setPermissions("email", "public_profile")
+        hw.setOnClickListener(this)
+        anon.setOnClickListener(this)
+        mailBtn.setOnClickListener(this)
+        google_sign_in_button.setOnClickListener(this)
+        //setupGoogleSignIn()
+        loadingDialog = LoadingDialog.createDialog(this)
         mCallbackManager = CallbackManager.Factory.create()
-        fbBtn.registerCallback(mCallbackManager, object : FacebookCallback<LoginResult> {
+        fb.registerCallback(mCallbackManager, object : FacebookCallback<LoginResult> {
             override fun onSuccess(loginResult: LoginResult) {
                 Log.d(TAG, "facebook:onSuccess:$loginResult")
                 val accessToken: String = loginResult.accessToken.token
@@ -88,19 +78,39 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener,
         })
     }
 
-    private fun setupGoogleSignIn() {
-        /*val status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
-        if (status == ConnectionResult.SUCCESS)
-            hasGooglePlayServices = true*/
-        val googleButton = findViewById<SignInButton>(R.id.google_sign_in_button)
-        googleButton.setOnClickListener(this)
+    //If the activity were started with the account binding deeplink
+    private fun accountBindingCheck() {
+        val appLinkIntent = intent
+        val appLinkData = appLinkIntent.data
+        if (appLinkData != null) {
+            val openId = appLinkData.getQueryParameter("openId")
+            if (openId != null && openId != "") {
+                if (AGConnectAuth.getInstance().currentUser != null) {
+                    val user: AGConnectUser = AGConnectAuth.getInstance().currentUser
+                    Log.e("User", "${user.displayName}\t${user.email}\t${user.uid}\t${user.phone}")
+                    displayDialog(user.displayName, user.uid, openId)
+                }
+
+            }
+        }
     }
+    //var hasGooglePlayServices = false
+    /*private fun setupGoogleSignIn() {
+        val status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
+        if (status == ConnectionResult.SUCCESS){
+            hasGooglePlayServices = true
+            google_sign_in_button.visibility=View.VISIBLE
+            google_sign_in_button.setOnClickListener(this)
+        }
+    }*/
 
     private fun startNavDrawer(user: AGConnectUser) {
-        if(loadingDialog.isShowing) loadingDialog.dismiss()
+        if (loadingDialog.isShowing) loadingDialog.dismiss()
         val intent = Intent(this, NavDrawer::class.java)
         if (user.displayName != null)
             intent.putExtra(DemoConstants.DISPLAY_NAME, user.displayName)
+        else if(user.email!=null)
+            intent.putExtra(DemoConstants.DISPLAY_NAME, user.email)
         intent.putExtra(DemoConstants.USER_ID, user.uid)
         startActivity(intent)
         finish()
@@ -137,7 +147,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     override fun onAccountBind(result: Int) {
-        if(loadingDialog.isShowing) loadingDialog.dismiss()
+        if (loadingDialog.isShowing) loadingDialog.dismiss()
         Toast.makeText(this, "Account Bind Code:" + result, Toast.LENGTH_SHORT).show()
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
@@ -163,23 +173,23 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener,
             }
 
             R.id.google_sign_in_button -> {
-                    val serviceConfig = AuthorizationServiceConfiguration(
-                        Uri.parse("https://accounts.google.com/o/oauth2/auth"), // authorization endpoint
-                        Uri.parse("https://oauth2.googleapis.com/token")
-                    ) // token endpoint
-                    val clientId=getString(R.string.google_client_id)
-                    val authRequestBuilder = AuthorizationRequest.Builder(
-                        serviceConfig,  // the authorization service configuration
-                        clientId,  // the client ID, typically pre-registered and static
-                        ResponseTypeValues.CODE,  //
-                        Uri.parse("$packageName:/oauth2redirect")
-                    ) // the redirect URI to which the auth response is sent
-                    authRequestBuilder.setScope("openid email profile")
-                    val authRequest = authRequestBuilder.build()
-                    val authService = AuthorizationService(this)
-                    val authIntent = authService.getAuthorizationRequestIntent(authRequest)
-                    startActivityForResult(authIntent, GOOGLE_SIGN_IN)
-                    authService.dispose()
+                val serviceConfig = AuthorizationServiceConfiguration(
+                    Uri.parse("https://accounts.google.com/o/oauth2/auth"), // authorization endpoint
+                    Uri.parse("https://oauth2.googleapis.com/token")
+                ) // token endpoint
+                val clientId = getString(R.string.google_client_id)
+                val authRequestBuilder = AuthorizationRequest.Builder(
+                    serviceConfig,  // the authorization service configuration
+                    clientId,  // the client ID, typically pre-registered and static
+                    ResponseTypeValues.CODE,  //
+                    Uri.parse("$packageName:/oauth2redirect")
+                ) // the redirect URI to which the auth response is sent
+                authRequestBuilder.setScope("openid email profile")
+                val authRequest = authRequestBuilder.build()
+                val authService = AuthorizationService(this)
+                val authIntent = authService.getAuthorizationRequestIntent(authRequest)
+                startActivityForResult(authIntent, GOOGLE_SIGN_IN)
+                authService.dispose()
                 //}
             }
 
@@ -193,9 +203,44 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener,
 
                 }
             }
+
+            R.id.mailBtn -> {
+
+                val input = mail.text.toString()
+                val regex = Regex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}\$")
+                if (!regex.matches(input)) {
+                    Snackbar.make(mailBtn, "Please use a valid email", Snackbar.LENGTH_SHORT).show()
+                } else {
+                    val settings = VerifyCodeSettings.newBuilder()
+                        .action(ACTION_REGISTER_LOGIN) //ACTION_REGISTER_LOGIN/ACTION_RESET_PASSWORD
+                        .sendInterval(30) // Minimum sending interval, ranging from 30s to 120s.
+                        .build()
+
+                    val task: Task<VerifyCodeResult> = EmailAuthProvider.requestVerifyCode(
+                        input,
+                        settings
+                    )
+                    task.addOnSuccessListener {
+                        //The verification code application is successful.
+                        Snackbar.make(
+                            mailBtn,
+                            "Verification code sent to your mailbox",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                        Log.e("EmailAuth", "success")
+                        //Display dialog
+                        val dialog = VerifyDialog(this, input)
+                        dialog.listener = this
+                        dialog.show()
+                    }
+                        .addOnFailureListener {
+                            Log.e("EmailAuth", it.toString())
+                        }
+
+                }
+            }
         }
     }
-
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -221,8 +266,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener,
                     "signIn get code failed: " + (authHuaweiIdTask.exception as ApiException).statusCode
                 )
             }
-        }
-        else if(requestCode == GOOGLE_SIGN_IN){
+        } else if (requestCode == GOOGLE_SIGN_IN) {
             if (data != null) {
                 val response = AuthorizationResponse.fromIntent(data)
                 val ex = AuthorizationException.fromIntent(data)
@@ -243,22 +287,47 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener,
                                     "Token Response [ Access Token: ${tokenResponse.accessToken}, ID Token: ${tokenResponse.idToken}"
                                 )
 
-                                val credential = GoogleAuthProvider.credentialWithToken(tokenResponse.idToken)
-                                AGConnectAuth.getInstance().signIn(credential).addOnSuccessListener {
-                                    // onSuccess
-                                    val user = it.user
-                                    startNavDrawer(user)
-                                }.addOnFailureListener {
-                                    Log.e(TAG,it.toString())
+                                val credential = GoogleAuthProvider.credentialWithToken(
+                                    tokenResponse.idToken
+                                )
+                                AGConnectAuth.getInstance().signIn(credential)
+                                    .addOnSuccessListener {
+                                        // onSuccess
+                                        val user = it.user
+                                        startNavDrawer(user)
+                                    }.addOnFailureListener {
+                                    Log.e(TAG, it.toString())
                                 }
                             }
                         }
                     }
                 }
             }
-        }
-        else {
+        } else {
             mCallbackManager.onActivityResult(requestCode, resultCode, data)//For facebook
         }
+    }
+
+    override fun onVerification(code: String, email: String, password: String) {
+        val emailUser = EmailUser.Builder()
+            .setEmail(email)
+            .setVerifyCode(code)
+            .setPassword(password) // Optional. If this parameter is set, the current user has created a password and can use the password to sign in.
+            // If this parameter is not set, the user can only sign in using a verification code.
+            .build()
+        AGConnectAuth.getInstance().createUser(emailUser)
+            .addOnSuccessListener{
+                    // After an account is created, the user is signed in by default.
+                startNavDrawer(it.user)
+                }
+
+            .addOnFailureListener{
+                //onFailure
+            }
+
+    }
+
+    override fun onCancel() {
+
     }
 }

@@ -14,11 +14,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.hms.example.dummyapplication.R
 import com.hms.example.dummyapplication.utils.GPS
-import com.huawei.hms.maps.CameraUpdateFactory
-import com.huawei.hms.maps.HuaweiMap
-import com.huawei.hms.maps.MapView
-import com.huawei.hms.maps.OnMapReadyCallback
+import com.huawei.hms.maps.*
 import com.huawei.hms.maps.model.LatLng
+import com.huawei.hms.maps.model.Marker
 import com.huawei.hms.maps.model.MarkerOptions
 import com.huawei.hms.maps.model.PointOfInterest
 //import com.huawei.hms.maps.model.PolygonOptions
@@ -30,10 +28,11 @@ import com.huawei.hms.site.api.model.SearchStatus
 import com.huawei.hms.site.api.model.Site
 import kotlinx.android.synthetic.main.fragment_map.*
 import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 
 class MapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener, GPS.OnGPSEventListener,
-    HuaweiMap.OnPoiClickListener {
+    HuaweiMap.OnPoiClickListener, HuaweiMap.OnMarkerDragListener {
 
     /*
 
@@ -43,10 +42,15 @@ class MapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener, GPS.On
     private lateinit var hMap: HuaweiMap
     private lateinit var gps: GPS
     private val TAG="MapFragment"
-    private val currentLocation:LatLng=LatLng(19.0,-99.0)
+    //private val currentLocation:LatLng=LatLng(19.0,-99.0)
     private val LOCATION_REQUEST=100
-    private val API_KEY=URLEncoder.encode("CV6vKDxoaSXKhlopIDAKuRANlut2oSNt66X9V69qtRLcbAhiQ8e8j1I/x3SZsjqmcnQM6vE9+KQVTH+myk9gNrBjTjXE", "UTF-8")
+    private val KEY="CV6vKDxoaSXKhlopIDAKuRANlut2oSNt66X9V69qtRLcbAhiQ8e8j1I/x3SZsjqmcnQM6vE9+KQVTH+myk9gNrBjTjXE"
+    private val API_KEY=URLEncoder.encode(KEY, StandardCharsets.UTF_8.name())
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        MapsInitializer.setApiKey("CV6vKDxoaSXKhlopIDAKuRANlut2oSNt66X9V69qtRLcbAhiQ8e8j1I/x3SZsjqmcnQM6vE9+KQVTH+myk9gNrBjTjXE")
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,7 +66,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener, GPS.On
         mapView.getMapAsync(this)
         fab.setOnClickListener(this)
         if(checkLocationPermissions()){
-            setupGPS()
+            //setupGPS()
         }else{
             requestLocationPermissions()
         }
@@ -74,9 +78,9 @@ class MapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener, GPS.On
         if (map != null) {
             hMap = map
             hMap.setOnPoiClickListener(this)
-            val update=CameraUpdateFactory.newLatLngZoom(currentLocation, 10.0f)
-            hMap.clear()
-            hMap.animateCamera(update)
+            //val update=CameraUpdateFactory.newLatLngZoom(currentLocation, 10.0f)
+            //hMap.clear()
+            //hMap.animateCamera(update)
         }
     }
 
@@ -91,8 +95,9 @@ class MapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener, GPS.On
     }
 
     override fun onDestroy() {
+        //mapView.onDestroy()
         super.onDestroy()
-        mapView.onDestroy()
+
     }
 
     override fun onPause() {
@@ -116,13 +121,13 @@ class MapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener, GPS.On
     override fun onClick(v: View?) {
         if(checkLocationPermissions()){
             if(gps.isStarted){
-                val update=CameraUpdateFactory.newLatLngZoom(currentLocation, 16.0f)
+                //val update=CameraUpdateFactory.newLatLngZoom(currentLocation, 16.0f)
                 hMap.clear()
-                hMap.animateCamera(update)
-                val marker=MarkerOptions()
-                    .title("You are here")
-                    .position(currentLocation)
-                hMap.addMarker(marker)
+                //hMap.animateCamera(update)
+                //val marker=MarkerOptions()
+                  //  .title("You are here")
+                    //.position(currentLocation)
+               // hMap.addMarker(marker)
             }else gps.startLocationsRequest()
         } else requestLocationPermissions()
     }
@@ -144,16 +149,16 @@ class MapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener, GPS.On
         } else {
             PackageManager.PERMISSION_GRANTED
         }
-        if(location==PackageManager.PERMISSION_GRANTED&&backgroundLocation==PackageManager.PERMISSION_GRANTED) return true
-        return false
+        return location==PackageManager.PERMISSION_GRANTED&&backgroundLocation==PackageManager.PERMISSION_GRANTED
     }
 
     override fun onResolutionRequired(e: Exception) {
     }
 
     override fun onLastKnownLocation(lat: Double, lon: Double) {
-        currentLocation.latitude=lat
-        currentLocation.longitude=lon
+        //currentLocation.latitude=lat
+        //currentLocation.longitude=lon
+        hMap.setOnMarkerDragListener(this)
     }
 
     override fun onRequestPermissionsResult(
@@ -212,5 +217,18 @@ class MapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener, GPS.On
             dialog.dismiss()
         }
         builder.create().show()
+    }
+
+    override fun onMarkerDragEnd(p0: Marker?) {
+        TODO("Not yet implemented")
+        
+    }
+
+    override fun onMarkerDragStart(p0: Marker?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onMarkerDrag(p0: Marker?) {
+        TODO("Not yet implemented")
     }
 }

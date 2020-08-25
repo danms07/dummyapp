@@ -7,13 +7,16 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.hms.example.dummyapplication.utils.DemoConstants
 import com.hms.example.dummyapplication.R
+import com.hms.example.dummyapplication.utils.DemoConstants
 import com.huawei.agconnect.auth.AGConnectAuth
 import com.huawei.agconnect.auth.AGConnectUser
 import com.huawei.agconnect.crash.AGConnectCrash
 import com.huawei.agconnect.remoteconfig.AGConnectConfig
+import com.huawei.hmf.tasks.Task
+import com.huawei.hms.push.HmsMessaging
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener, Runnable{
@@ -26,6 +29,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, Runnable{
         AGConnectCrash.getInstance().enableCrashCollection(true)
         initDefaults()//Remote Config
         createNotificationChannel()
+        subsribe()
         val bundle=intent.extras
         if(bundle!=null){
             for(key in bundle.keySet())
@@ -49,6 +53,33 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, Runnable{
 
     }
 
+    private fun subsribe() {
+        try {
+            HmsMessaging.getInstance(this).subscribe("topic")
+                .addOnCompleteListener(){
+                        if (it.isSuccessful) {
+                            Log.i("TAG", "subscribe Complete")
+                            Toast.makeText(this, "subscribe Complete", Toast.LENGTH_LONG)
+                                .show()
+                        } else {
+                            Log.e(
+                                "TAG",
+                                "subscribe failed: ret=" + it.exception.message
+                            )
+                            Toast.makeText(
+                                this,
+                                "subscribe failed: ret=" + it.exception.message,
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+
+        } catch (e: Exception) {
+            Log.e("TAG", "subscribe failed: exception=" + e.message)
+            Toast.makeText(this, "subscribe failed: ret=" + e.message, Toast.LENGTH_LONG)
+                .show()
+        }
+    }
 
 
     private fun createNotificationChannel(){
@@ -97,6 +128,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, Runnable{
         val intent=Intent(this, NavDrawer::class.java)
         if(user.displayName!=null)
             intent.putExtra(DemoConstants.DISPLAY_NAME,user.displayName)
+        else if(user.email!=null)
+            intent.putExtra(DemoConstants.DISPLAY_NAME, user.email)
         intent.putExtra(DemoConstants.USER_ID,user.uid)
         startActivity(intent)
         finish()
