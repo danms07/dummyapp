@@ -38,6 +38,8 @@ import com.huawei.hms.feature.model.FeatureInstallSessionStatus
 import com.huawei.hms.feature.model.InstallState
 import com.huawei.hms.feature.tasks.FeatureTask
 import com.huawei.hms.feature.tasks.listener.OnFeatureCompleteListener
+import kotlinx.android.synthetic.main.activity_nav_drawer.*
+import kotlinx.android.synthetic.main.activity_nav_drawer.view.*
 
 
 class NavDrawer : AppCompatActivity(),
@@ -72,8 +74,8 @@ class NavDrawer : AppCompatActivity(),
 
 
 
-        val textLogout=navView.findViewById<TextView>(R.id.logout)
-        textLogout.setOnClickListener(this)
+        nav_view.logout.setOnClickListener(this)
+
         val navController = findNavController(R.id.nav_host_fragment)
 
         // Passing each menu ID as a set of Ids because each

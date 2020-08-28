@@ -14,7 +14,7 @@
     <string name="menu_remote">Remote</string>
     <string name="menu_crash">Crash</string>
     <string name="menu_drive">Drive</string>
-    <string name="sign_with_your_account">Sign In with your favourite account</string>
+    <string name="sign_with_your_account">Sign In with your favorite account</string>
     <string name="use_mail">Or access with your email</string>
     <string name="validate_mail">Validate email</string>
 

@@ -109,7 +109,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener,
         val intent = Intent(this, NavDrawer::class.java)
         if (user.displayName != null)
             intent.putExtra(DemoConstants.DISPLAY_NAME, user.displayName)
-        else if(user.email!=null)
+        else if (user.email != null)
             intent.putExtra(DemoConstants.DISPLAY_NAME, user.email)
         intent.putExtra(DemoConstants.USER_ID, user.uid)
         startActivity(intent)
@@ -157,154 +157,169 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener,
     override fun onClick(v: View?) {
         loadingDialog.show()
         when (v?.id) {
-            R.id.hw -> {
-                val mAuthParam =
-                    HuaweiIdAuthParamsHelper(HuaweiIdAuthParams.DEFAULT_AUTH_REQUEST_PARAM)
-                        .setIdToken()
-                        .setAccessToken()
-                        .createParams()
+            R.id.hw -> signInWithHWID()
 
+            R.id.google_sign_in_button -> signInWithGoogle()
 
-                val mAuthManager = HuaweiIdAuthManager.getService(this, mAuthParam)
-                startActivityForResult(
-                    mAuthManager.signInIntent,
-                    HWID_SIGN_IN
-                )
-            }
+            R.id.anon -> signInAnonymously()
 
-            R.id.google_sign_in_button -> {
-                val serviceConfig = AuthorizationServiceConfiguration(
-                    Uri.parse("https://accounts.google.com/o/oauth2/auth"), // authorization endpoint
-                    Uri.parse("https://oauth2.googleapis.com/token")
-                ) // token endpoint
-                val clientId = getString(R.string.google_client_id)
-                val authRequestBuilder = AuthorizationRequest.Builder(
-                    serviceConfig,  // the authorization service configuration
-                    clientId,  // the client ID, typically pre-registered and static
-                    ResponseTypeValues.CODE,  //
-                    Uri.parse("$packageName:/oauth2redirect")
-                ) // the redirect URI to which the auth response is sent
-                authRequestBuilder.setScope("openid email profile")
-                val authRequest = authRequestBuilder.build()
-                val authService = AuthorizationService(this)
-                val authIntent = authService.getAuthorizationRequestIntent(authRequest)
-                startActivityForResult(authIntent, GOOGLE_SIGN_IN)
-                authService.dispose()
-                //}
-            }
-
-            R.id.anon -> {
-                AGConnectAuth.getInstance().signInAnonymously().addOnSuccessListener {
-                    // onSuccess
-                    val user = it.user
-                    startNavDrawer(user)
-                }.addOnFailureListener {
-                    // onFail
-
-                }
-            }
-
-            R.id.mailBtn -> {
-
-                val input = mail.text.toString()
-                val regex = Regex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}\$")
-                if (!regex.matches(input)) {
-                    Snackbar.make(mailBtn, "Please use a valid email", Snackbar.LENGTH_SHORT).show()
-                } else {
-                    val settings = VerifyCodeSettings.newBuilder()
-                        .action(ACTION_REGISTER_LOGIN) //ACTION_REGISTER_LOGIN/ACTION_RESET_PASSWORD
-                        .sendInterval(30) // Minimum sending interval, ranging from 30s to 120s.
-                        .build()
-
-                    val task: Task<VerifyCodeResult> = EmailAuthProvider.requestVerifyCode(
-                        input,
-                        settings
-                    )
-                    task.addOnSuccessListener {
-                        //The verification code application is successful.
-                        Snackbar.make(
-                            mailBtn,
-                            "Verification code sent to your mailbox",
-                            Snackbar.LENGTH_SHORT
-                        ).show()
-                        Log.e("EmailAuth", "success")
-                        //Display dialog
-                        val dialog = VerifyDialog(this, input)
-                        dialog.listener = this
-                        dialog.show()
-                    }
-                        .addOnFailureListener {
-                            Log.e("EmailAuth", it.toString())
-                        }
-
-                }
-            }
+            R.id.mailBtn -> signInWithMail()
         }
+    }
+
+    private fun signInWithHWID() {
+        val mAuthParam =
+            HuaweiIdAuthParamsHelper(HuaweiIdAuthParams.DEFAULT_AUTH_REQUEST_PARAM)
+                .setIdToken()
+                .setAccessToken()
+                .createParams()
+
+        val mAuthManager = HuaweiIdAuthManager.getService(this, mAuthParam)
+        startActivityForResult(
+            mAuthManager.signInIntent,
+            HWID_SIGN_IN
+        )
+    }
+
+    private fun signInWithGoogle() {
+        val serviceConfig = AuthorizationServiceConfiguration(
+            Uri.parse("https://accounts.google.com/o/oauth2/auth"), // authorization endpoint
+            Uri.parse("https://oauth2.googleapis.com/token")
+        ) // token endpoint
+        val clientId = getString(R.string.google_client_id)
+        val authRequestBuilder = AuthorizationRequest.Builder(
+            serviceConfig,  // the authorization service configuration
+            clientId,  // the client ID, typically pre-registered and static
+            ResponseTypeValues.CODE,  //
+            Uri.parse("$packageName:/oauth2redirect")
+        ) // the redirect URI to which the auth response is sent
+        authRequestBuilder.setScope("openid email profile")
+        val authRequest = authRequestBuilder.build()
+        val authService = AuthorizationService(this)
+        val authIntent = authService.getAuthorizationRequestIntent(authRequest)
+        startActivityForResult(authIntent, GOOGLE_SIGN_IN)
+        authService.dispose()
+        //}
+    }
+
+    private fun signInAnonymously() {
+        AGConnectAuth.getInstance().signInAnonymously().addOnSuccessListener {
+            // onSuccess
+            val user = it.user
+            startNavDrawer(user)
+        }.addOnFailureListener {
+            // onFail
+
+        }
+    }
+
+    private fun signInWithMail() {
+        val input = mail.text.toString()
+        val regex = Regex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}\$")
+        if (!regex.matches(input)) {
+            Snackbar.make(mailBtn, "Please use a valid email", Snackbar.LENGTH_SHORT).show()
+            return
+        }
+
+        val settings = VerifyCodeSettings.newBuilder()
+            .action(ACTION_REGISTER_LOGIN) //ACTION_REGISTER_LOGIN/ACTION_RESET_PASSWORD
+            .sendInterval(30) // Minimum sending interval, ranging from 30s to 120s.
+            .build()
+
+        val task: Task<VerifyCodeResult> = EmailAuthProvider.requestVerifyCode(
+            input,
+            settings
+        )
+        task.addOnSuccessListener {
+            //The verification code application is successful.
+            Snackbar.make(
+                mailBtn,
+                "Verification code sent to your mailbox",
+                Snackbar.LENGTH_SHORT
+            ).show()
+            Log.e("EmailAuth", "success")
+            //Display dialog
+            val dialog = VerifyDialog(this, input)
+            dialog.listener = this
+            dialog.show()
+        }
+            .addOnFailureListener {
+                Log.e("EmailAuth", it.toString())
+            }
+
+
     }
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == HWID_SIGN_IN) {
-            //Huawei login success
-            val authHuaweiIdTask = HuaweiIdAuthManager.parseAuthResultFromIntent(data)
-            if (authHuaweiIdTask.isSuccessful) {
-                val huaweiAccount = authHuaweiIdTask.result//
-                val accessToken = huaweiAccount.accessToken
-                val credential = HwIdAuthProvider.credentialWithToken(accessToken)
-                AGConnectAuth.getInstance().signIn(credential).addOnSuccessListener {
-                    // onSuccess
-                    val user = it.user
-                    startNavDrawer(user)
-                }.addOnFailureListener {
-                    // onFail
-                    Log.e(TAG, it.toString())
-                }
-            } else {
-                Log.i(
-                    TAG,
-                    "signIn get code failed: " + (authHuaweiIdTask.exception as ApiException).statusCode
-                )
-            }
+            handleHWSignIn(data)
         } else if (requestCode == GOOGLE_SIGN_IN) {
-            if (data != null) {
-                val response = AuthorizationResponse.fromIntent(data)
-                val ex = AuthorizationException.fromIntent(data)
-                val authState = AuthState(response, ex)
-                if (response != null) {
-                    val service = AuthorizationService(this)
-                    service.performTokenRequest(
-                        response.createTokenExchangeRequest()
-                    ) { tokenResponse, exception ->
-                        service.dispose()
-                        if (exception != null) {
-                            Log.e(TAG, "Token Exchange failed", exception)
-                        } else {
-                            if (tokenResponse != null) {
-                                authState.update(tokenResponse, exception)
-                                Log.e(
-                                    TAG,
-                                    "Token Response [ Access Token: ${tokenResponse.accessToken}, ID Token: ${tokenResponse.idToken}"
-                                )
+            handleGoogleSignIn(data)
+        } else {
+            mCallbackManager.onActivityResult(requestCode, resultCode, data)//For facebook
+        }
+    }
 
-                                val credential = GoogleAuthProvider.credentialWithToken(
-                                    tokenResponse.idToken
-                                )
-                                AGConnectAuth.getInstance().signIn(credential)
-                                    .addOnSuccessListener {
-                                        // onSuccess
-                                        val user = it.user
-                                        startNavDrawer(user)
-                                    }.addOnFailureListener {
+    private fun handleGoogleSignIn(data: Intent?) {
+        if (data != null) {
+            val response = AuthorizationResponse.fromIntent(data)
+            val ex = AuthorizationException.fromIntent(data)
+            val authState = AuthState(response, ex)
+            if (response != null) {
+                val service = AuthorizationService(this)
+                service.performTokenRequest(
+                    response.createTokenExchangeRequest()
+                ) { tokenResponse, exception ->
+                    service.dispose()
+                    if (exception != null) {
+                        Log.e(TAG, "Token Exchange failed", exception)
+                    } else {
+                        if (tokenResponse != null) {
+                            authState.update(tokenResponse, exception)
+                            Log.e(
+                                TAG,
+                                "Token Response [ Access Token: ${tokenResponse.accessToken}, ID Token: ${tokenResponse.idToken}"
+                            )
+
+                            val credential = GoogleAuthProvider.credentialWithToken(
+                                tokenResponse.idToken
+                            )
+                            AGConnectAuth.getInstance().signIn(credential)
+                                .addOnSuccessListener {
+                                    // onSuccess
+                                    val user = it.user
+                                    startNavDrawer(user)
+                                }.addOnFailureListener {
                                     Log.e(TAG, it.toString())
                                 }
-                            }
                         }
                     }
                 }
             }
+        }
+    }
+
+    private fun handleHWSignIn(data: Intent?) {
+        val authHuaweiIdTask = HuaweiIdAuthManager.parseAuthResultFromIntent(data)
+        if (authHuaweiIdTask.isSuccessful) {
+            val huaweiAccount = authHuaweiIdTask.result//
+            val accessToken = huaweiAccount.accessToken
+            val credential = HwIdAuthProvider.credentialWithToken(accessToken)
+            AGConnectAuth.getInstance().signIn(credential).addOnSuccessListener {
+                // onSuccess
+                val user = it.user
+                startNavDrawer(user)
+            }.addOnFailureListener {
+                // onFail
+                Log.e(TAG, it.toString())
+            }
         } else {
-            mCallbackManager.onActivityResult(requestCode, resultCode, data)//For facebook
+            Log.i(
+                TAG,
+                "signIn get code failed: " + (authHuaweiIdTask.exception as ApiException).statusCode
+            )
         }
     }
 
@@ -316,13 +331,13 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener,
             // If this parameter is not set, the user can only sign in using a verification code.
             .build()
         AGConnectAuth.getInstance().createUser(emailUser)
-            .addOnSuccessListener{
-                    // After an account is created, the user is signed in by default.
+            .addOnSuccessListener {
+                // After an account is created, the user is signed in by default.
                 startNavDrawer(it.user)
-                }
+            }
 
-            .addOnFailureListener{
-                //onFailure
+            .addOnFailureListener {
+                Log.e("AuthSevice","Email Sign in failed $it")
             }
 
     }
