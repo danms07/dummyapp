@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.hms.example.dummyapplication.R
 import com.hms.example.dummyapplication.utils.GPS
 import com.huawei.hms.maps.*
@@ -34,15 +35,14 @@ import java.nio.charset.StandardCharsets
 class MapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener, GPS.OnGPSEventListener,
     HuaweiMap.OnPoiClickListener, HuaweiMap.OnMarkerDragListener {
 
-    /*
+
 
     private lateinit var mMapView: MapView
-    private lateinit var search: SearchFragment
-    private lateinit var fab:FloatingActionButton*/
+    //private lateinit var search: SearchFragment
     private lateinit var hMap: HuaweiMap
     private lateinit var gps: GPS
     private val TAG="MapFragment"
-    //private val currentLocation:LatLng=LatLng(19.0,-99.0)
+    private val currentLocation:LatLng=LatLng(19.0,-99.0)
     private val LOCATION_REQUEST=100
     private val KEY="CV6vKDxoaSXKhlopIDAKuRANlut2oSNt66X9V69qtRLcbAhiQ8e8j1I/x3SZsjqmcnQM6vE9+KQVTH+myk9gNrBjTjXE"
     private val API_KEY=URLEncoder.encode(KEY, StandardCharsets.UTF_8.name())
@@ -78,7 +78,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener, GPS.On
         if (map != null) {
             hMap = map
             hMap.setOnPoiClickListener(this)
-            hMap.isMyLocationEnabled=true
+            //hMap.isMyLocationEnabled=true
             hMap.uiSettings.isMyLocationButtonEnabled=true
             if(arguments!=null){
                 val latitude=arguments?.getDouble("lat",0.0)
@@ -87,7 +87,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener, GPS.On
                 val update=CameraUpdateFactory.newLatLngZoom(location, 10.0f)
                 hMap.clear()
                 hMap.animateCamera(update)
-            }
+                //hMap.setOnMarkerDragListener(this)
+            } else navigateToLocation(currentLocation)
 
         }
     }
@@ -129,15 +130,19 @@ class MapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener, GPS.On
     override fun onClick(v: View?) {
         if(checkLocationPermissions()){
             if(gps.isStarted){
-                //val update=CameraUpdateFactory.newLatLngZoom(currentLocation, 16.0f)
-                hMap.clear()
-                //hMap.animateCamera(update)
-                //val marker=MarkerOptions()
-                  //  .title("You are here")
-                    //.position(currentLocation)
-               // hMap.addMarker(marker)
+                navigateToLocation(currentLocation)
             }else gps.startLocationsRequest()
         } else requestLocationPermissions()
+    }
+
+    private fun navigateToLocation(location: LatLng, zoom: Float=16.0f) {
+        val update=CameraUpdateFactory.newLatLngZoom(location, zoom)
+        hMap.clear()
+        hMap.animateCamera(update)
+        val marker=MarkerOptions()
+            .title("You are here")
+            .position(location)
+        hMap.addMarker(marker)
     }
 
     private fun requestLocationPermissions() {
@@ -161,12 +166,15 @@ class MapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener, GPS.On
     }
 
     override fun onResolutionRequired(e: Exception) {
+        //This callback is triggered if the user
+        // hasn't gave location permissions to the HMSCore app
     }
 
     override fun onLastKnownLocation(lat: Double, lon: Double) {
-        //currentLocation.latitude=lat
-        //currentLocation.longitude=lon
-        hMap.setOnMarkerDragListener(this)
+        currentLocation.latitude=lat
+        currentLocation.longitude=lon
+        //
+
     }
 
     override fun onRequestPermissionsResult(
