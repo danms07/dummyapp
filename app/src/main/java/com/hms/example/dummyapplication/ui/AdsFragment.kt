@@ -27,13 +27,18 @@ class AdsFragment : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+    }
+
+    override fun onResume() {
+        super.onResume()
         loadBannerAd()
     }
 
     fun loadBannerAd(){
+        //view?.setVisibility(View.GONE)
         val bannerView=view?.banner
         bannerView?.adId = getString(R.string.ad_id)
-        bannerView?.bannerAdSize = BannerAdSize.BANNER_SIZE_360_57
         val adParam = AdParam.Builder().build()
         bannerView?.adListener= MyAdListener(requireContext(),"Banner Ad")
         bannerView?.loadAd(adParam)

@@ -66,7 +66,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener, GPS.On
         mapView.getMapAsync(this)
         fab.setOnClickListener(this)
         if(checkLocationPermissions()){
-            //setupGPS()
+            setupGPS()
         }else{
             requestLocationPermissions()
         }
@@ -78,9 +78,17 @@ class MapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener, GPS.On
         if (map != null) {
             hMap = map
             hMap.setOnPoiClickListener(this)
-            //val update=CameraUpdateFactory.newLatLngZoom(currentLocation, 10.0f)
-            //hMap.clear()
-            //hMap.animateCamera(update)
+            hMap.isMyLocationEnabled=true
+            hMap.uiSettings.isMyLocationButtonEnabled=true
+            if(arguments!=null){
+                val latitude=arguments?.getDouble("lat",0.0)
+                val longitude=arguments?.getDouble("lon",0.0)
+                val location=LatLng(latitude!!,longitude!!)
+                val update=CameraUpdateFactory.newLatLngZoom(location, 10.0f)
+                hMap.clear()
+                hMap.animateCamera(update)
+            }
+
         }
     }
 

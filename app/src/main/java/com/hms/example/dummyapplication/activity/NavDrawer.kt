@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.ComponentName
 import android.content.Intent
 import android.content.IntentSender.SendIntentException
+import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -21,15 +22,14 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
-import com.hms.example.dummyapplication.utils.DemoConstants
 import com.hms.example.dummyapplication.R
+import com.hms.example.dummyapplication.utils.DemoConstants
 import com.hms.example.dummyapplication.utils.TokenTask
 import com.huawei.agconnect.auth.AGConnectAuth
 import com.huawei.agconnect.core.service.auth.TokenSnapshot
 import com.huawei.hmf.tasks.OnSuccessListener
 import com.huawei.hms.aaid.HmsInstanceId
 import com.huawei.hms.aaid.entity.AAIDResult
-import com.huawei.hms.ads.HwAds
 import com.huawei.hms.feature.install.FeatureInstallManager
 import com.huawei.hms.feature.install.FeatureInstallManagerFactory
 import com.huawei.hms.feature.listener.InstallStateListener
@@ -74,6 +74,8 @@ class NavDrawer : AppCompatActivity(),
 
 
 
+
+
         nav_view.logout.setOnClickListener(this)
 
         val navController = findNavController(R.id.nav_host_fragment)
@@ -96,6 +98,16 @@ class NavDrawer : AppCompatActivity(),
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+        if (intent.data?.scheme=="geo"){
+            val data=intent.data.toString()
+            val latlong = data.replace("geo:", "").split(",").toTypedArray()
+            val bundle=Bundle().apply {
+                putString("lat",latlong[0])
+                putString("lon",latlong[1])
+            }
+
+            navController.navigate(R.id.map,bundle)
+        }
         setupAGCAuth()
         getToken()
     }
@@ -103,17 +115,17 @@ class NavDrawer : AppCompatActivity(),
     private fun setupAGCAuth() {
         AGConnectAuth.getInstance().addTokenListener {
             when(it.state){
-                TokenSnapshot.State.TOKEN_UPDATED ->{
+                TokenSnapshot.State.TOKEN_UPDATED -> {
                     val token = it.token
-                    Log.i("Main Activity",token)
+                    Log.i("Main Activity", token)
                 }
 
-                TokenSnapshot.State.TOKEN_INVALID ->{
-                    Log.e(TAG,"Token invalid")
+                TokenSnapshot.State.TOKEN_INVALID -> {
+                    Log.e(TAG, "Token invalid")
                 }
-                TokenSnapshot.State.SIGNED_OUT->{
-                    Log.e(TAG,"Signed Out")
-                    val intent=Intent(this,LoginActivity::class.java)
+                TokenSnapshot.State.SIGNED_OUT -> {
+                    Log.e(TAG, "Signed Out")
+                    val intent = Intent(this, LoginActivity::class.java)
                     startActivity(intent)
                     finish()
                 }
@@ -136,7 +148,7 @@ class NavDrawer : AppCompatActivity(),
         val bundle=intent.extras
         if(bundle!=null){
             for(key in bundle.keySet())
-                Log.e(TAG,"$key ${bundle.get(key)}")
+                Log.e(TAG, "$key ${bundle.get(key)}")
         }
 
     }
@@ -155,17 +167,20 @@ class NavDrawer : AppCompatActivity(),
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
-            R.id.features->{
+            R.id.features -> {
                 mFeatureInstallManager = FeatureInstallManagerFactory.create(this);
                 val moduleNames: Set<String> = mFeatureInstallManager?.allInstalledModules!!
                 //Check for all installed features
-                for(feature in moduleNames){
-                    Log.e(TAG,"Feature: $feature")
+                for (feature in moduleNames) {
+                    Log.e(TAG, "Feature: $feature")
                 }
                 val featureId = getString(R.string.title_dynamicfeature1)
                 if (featureId in moduleNames) {
                     //Feature is intstalled
-                    val intent = Intent(this,Class.forName("com.hms.example.dynamicfeature1.DemoActivity"))
+                    val intent = Intent(
+                        this,
+                        Class.forName("com.hms.example.dynamicfeature1.DemoActivity")
+                    )
                     startActivity(intent)
                 } else {
                     //Display Request Dialog
@@ -193,17 +208,22 @@ class NavDrawer : AppCompatActivity(),
                     mFeatureInstallManager?.registerInstallListener(this)
                 }
             }
-            R.id.settings->{
-                val intent=Intent()
+            R.id.settings -> {
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:com.huawei.hwid"))
+                intent.flags=Intent.FLAG_ACTIVITY_NEW_TASK
                 //intent.component = ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.optimize.process.ProtectActivity")
-                intent.component = ComponentName("com.huawei.appmarket", "com.huawei.appgallery.detail.detailbase.common.activity.AppDetailCommentActivity")
+                //com.android.settings/com.android.settings.Settings$AppAndNotificationDashboardActivity
+                /*intent.component = ComponentName(
+                    "com.huawei.appmarket",
+                    "com.huawei.appgallery.detail.detailbase.common.activity.AppDetailCommentActivity"
+                )*/
                 try {
                     startActivity(intent)
                 } catch (ex: ActivityNotFoundException) {
                     // Fallback to global settings
                     startActivity(Intent(Settings.ACTION_SETTINGS))
-                }catch (e : SecurityException){
-                    Log.e("Catch",e.toString())
+                } catch (e: SecurityException) {
+                    Log.e("Catch", e.toString())
                     startActivity(Intent(Settings.ACTION_SETTINGS))
                 }
             }
@@ -224,7 +244,7 @@ class NavDrawer : AppCompatActivity(),
         val inst = HmsInstanceId.getInstance(this)
         val idResult =  inst.aaid
         idResult.addOnSuccessListener(this).addOnFailureListener{
-            Log.e(TAG,"Failure $it")
+            Log.e(TAG, "Failure $it")
         }
     }
 
@@ -260,13 +280,13 @@ class NavDrawer : AppCompatActivity(),
     //AAID on success listener
     override fun onSuccess(aaidResult: AAIDResult?) {
         val aaid=aaidResult?.id
-        Log.e(TAG,"AAID $aaid")
+        Log.e(TAG, "AAID $aaid")
     }
 
     override fun onClick(v: View?) {
         when(v?.id){
-            R.id.logout ->{
-                Log.e(TAG,"on click logout")
+            R.id.logout -> {
+                Log.e(TAG, "on click logout")
                 AGConnectAuth.getInstance().signOut()
             }
         }

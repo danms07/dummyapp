@@ -28,11 +28,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.AdsActivity"
-            >
-            
+        <activity android:name=".activity.PlaceDetectActivity">
+
         </activity>
-        <activity android:name=".activity.QuestionActivity" /> <!-- Push Kit Auto Enabled -->
+        <activity android:name=".activity.AdsActivity"></activity>
+        <!-- Push Kit Auto Enabled -->
         <meta-data
             android:name="push_kit_auto_init_enabled"
             android:value="true" /> <!-- APM -->
@@ -102,10 +102,19 @@
         <activity
             android:name=".activity.NavDrawer"
             android:label="@string/title_activity_nav_drawer"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <data android:scheme="geo" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity android:name=".activity.TargetActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -116,6 +125,7 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -142,6 +152,21 @@
                 <data android:scheme="com.hms.example.dummyapplication" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".utils.SessionChangeService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <receiver
+            android:name=".utils.SessionReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.media.action.OPEN_AUDIO_EFFECT_CONTROL_SESSION" />
+                <action android:name="android.media.action.CLOSE_AUDIO_EFFECT_CONTROL_SESSION" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
