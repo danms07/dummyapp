@@ -22,8 +22,8 @@ android {
         applicationId "com.hms.example.dummyapplication"
         minSdkVersion 27
         targetSdkVersion 29
-        versionCode 8
-        versionName "1.1.5"
+        versionCode 9
+        versionName "1.1.6"
         manifestPlaceholders = [
                 'appAuthRedirectScheme': 'com.googleusercontent.apps.PREFIX'
         ]

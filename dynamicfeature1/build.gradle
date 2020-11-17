@@ -6,7 +6,6 @@ android {
     compileSdkVersion 29
     buildTypes{
         release{
-            debuggable true
         }
     }
 
