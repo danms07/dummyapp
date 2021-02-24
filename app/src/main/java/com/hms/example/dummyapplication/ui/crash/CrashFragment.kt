@@ -34,6 +34,6 @@ class CrashFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        AGConnectCrash.getInstance().testIt()
+        AGConnectCrash.getInstance().testIt(requireContext())
     }
 }

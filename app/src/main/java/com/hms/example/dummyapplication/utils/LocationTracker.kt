@@ -7,9 +7,13 @@ import android.util.Log
 import com.huawei.hms.common.ApiException
 import com.huawei.hms.location.*
 
-public class GPS(val context: Context) : LocationCallback() {
-    private val TAG = "GPS Tracker"
+class LocationTracker(val context: Context) : LocationCallback() {
+    companion object{
+        private const val TAG = "GPS Tracker"
+    }
     var isStarted:Boolean=false
+    private set
+
     var gpsEventListener:OnGPSEventListener? =null
 
 
@@ -30,14 +34,14 @@ public class GPS(val context: Context) : LocationCallback() {
         // check devices settings before request location updates.
         settingsClient.checkLocationSettings(locationSettingsRequest)
             .addOnSuccessListener {
-                Log.i(TAG, "check location settings success")
+                Log.e(TAG, "check location settings success")
                 //request location updates
                 fusedLocationProviderClient.requestLocationUpdates(
                     mLocationRequest,
                     this,
                     Looper.getMainLooper()
                 ).addOnSuccessListener{
-                    Log.i(
+                    Log.e(
                         TAG,
                         "requestLocationUpdatesWithCallback onSuccess"
                     )
@@ -62,12 +66,12 @@ public class GPS(val context: Context) : LocationCallback() {
             }
     }
 
-    fun removeLocationUpdatesWithCallback() {
+    fun removeLocationUpdates() {
         try {
             fusedLocationProviderClient.removeLocationUpdates(this)
                 .addOnSuccessListener{
                     isStarted=false
-                    Log.i(
+                    Log.e(
                         TAG,
                         "removeLocationUpdatesWithCallback onSuccess"
                     )
@@ -93,9 +97,9 @@ public class GPS(val context: Context) : LocationCallback() {
                 for (location in locations) {
                     Log.e(
                         TAG,
-                        "onLocationResult location[Longitude,Latitude,Accuracy]:" + location.getLongitude()
-                            .toString() + "," + location.getLatitude()
-                            .toString() + "," + location.getAccuracy()
+                        "onLocationResult location[Longitude,Latitude,Accuracy]:" + location.longitude
+                            .toString() + "," + location.latitude
+                            .toString() + "," + location.accuracy
                     )
                 }
             }

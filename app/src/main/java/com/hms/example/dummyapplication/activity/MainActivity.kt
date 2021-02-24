@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, Runnable{
 
         if(AGConnectAuth.getInstance().currentUser!=null){
 
-            Log.e("Provider",AGConnectAuth.getInstance().currentUser.providerInfo.toString())
+            //Log.e("Provider",AGConnectAuth.getInstance().currentUser.providerInfo.toString())
             val handler:Handler=Handler()
             handler.postDelayed(this,1000)
         }

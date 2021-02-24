@@ -1,7 +1,6 @@
 package com.hms.example.dummyapplication.ui
 
 import android.Manifest
-import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -12,61 +11,68 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.hms.example.dummyapplication.R
-import com.hms.example.dummyapplication.utils.GPS
+import com.hms.example.dummyapplication.databinding.MapBinding
+import com.hms.example.dummyapplication.utils.LocationTracker
+import com.huawei.agconnect.config.AGConnectServicesConfig
 import com.huawei.hms.maps.*
 import com.huawei.hms.maps.model.LatLng
 import com.huawei.hms.maps.model.Marker
 import com.huawei.hms.maps.model.MarkerOptions
 import com.huawei.hms.maps.model.PointOfInterest
-//import com.huawei.hms.maps.model.PolygonOptions
 import com.huawei.hms.site.api.SearchResultListener
 import com.huawei.hms.site.api.SearchServiceFactory
 import com.huawei.hms.site.api.model.DetailSearchRequest
 import com.huawei.hms.site.api.model.DetailSearchResponse
 import com.huawei.hms.site.api.model.SearchStatus
 import com.huawei.hms.site.api.model.Site
-import kotlinx.android.synthetic.main.fragment_map.*
+import java.lang.StringBuilder
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 
-class MapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener, GPS.OnGPSEventListener,
+class MapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener, LocationTracker.OnGPSEventListener,
     HuaweiMap.OnPoiClickListener, HuaweiMap.OnMarkerDragListener {
-
-
-
-    private lateinit var mMapView: MapView
     //private lateinit var search: SearchFragment
-    private lateinit var hMap: HuaweiMap
-    private lateinit var gps: GPS
-    private val TAG="MapFragment"
-    private val currentLocation:LatLng=LatLng(19.0,-99.0)
-    private val LOCATION_REQUEST=100
-    private val KEY="CV6vKDxoaSXKhlopIDAKuRANlut2oSNt66X9V69qtRLcbAhiQ8e8j1I/x3SZsjqmcnQM6vE9+KQVTH+myk9gNrBjTjXE"
-    private val API_KEY=URLEncoder.encode(KEY, StandardCharsets.UTF_8.name())
+
+    companion object{
+        private const val TAG="MapFragment"
+        private const val LOCATION_REQUEST=100
+    }
+    private val lastKnownLocation:LatLng=LatLng(19.0,-99.0)
+    private var hMap: HuaweiMap?=null
+    private var locationTracker: LocationTracker?=null
+    private var mapView:MapView?=null
+    private var apiKey:String=""
+    private lateinit var mapBinding:MapBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        MapsInitializer.setApiKey("CV6vKDxoaSXKhlopIDAKuRANlut2oSNt66X9V69qtRLcbAhiQ8e8j1I/x3SZsjqmcnQM6vE9+KQVTH+myk9gNrBjTjXE")
+        apiKey= AGConnectServicesConfig
+            .fromContext(requireContext())
+            .getString("client/api_key")
+        MapsInitializer.setApiKey(apiKey)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_map, container, false)
+        mapBinding= MapBinding.inflate(inflater,container,false)
+        return mapBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mapView.onCreate(null)
-        mapView.getMapAsync(this)
-        fab.setOnClickListener(this)
+        mapView=mapBinding.mapView
+        mapView?.apply {
+            onCreate(null)
+            getMapAsync(this@MapFragment)
+        }
+        mapBinding.fab.setOnClickListener(this)
         if(checkLocationPermissions()){
-            setupGPS()
+            setupLocationTracker()
         }else{
             requestLocationPermissions()
         }
@@ -74,85 +80,95 @@ class MapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener, GPS.On
     }
 
     override fun onMapReady(map: HuaweiMap?) {
-        Log.d(TAG, "onMapReady: ")
-        if (map != null) {
-            hMap = map
-            hMap.setOnPoiClickListener(this)
-            //hMap.isMyLocationEnabled=true
-            hMap.uiSettings.isMyLocationButtonEnabled=true
-            if(arguments!=null){
-                val latitude=arguments?.getDouble("lat",0.0)
-                val longitude=arguments?.getDouble("lon",0.0)
-                val location=LatLng(latitude!!,longitude!!)
-                val update=CameraUpdateFactory.newLatLngZoom(location, 10.0f)
-                hMap.clear()
-                hMap.animateCamera(update)
-                //hMap.setOnMarkerDragListener(this)
-            } else navigateToLocation(currentLocation)
 
-        }
+            hMap = map
+            hMap?.apply {
+                setOnPoiClickListener(this@MapFragment)
+                //hMap.isMyLocationEnabled=true
+                uiSettings.isMyLocationButtonEnabled=true
+                if(arguments!=null){
+                    val latitude=arguments?.getDouble("lat",0.0)
+                    val longitude=arguments?.getDouble("lon",0.0)
+                    val location=LatLng(latitude!!,longitude!!)
+                    val update=CameraUpdateFactory.newLatLngZoom(location, 10.0f)
+                    clear()
+                    animateCamera(update)
+            }else navigateToLocation(lastKnownLocation)
+
+                //hMap.setOnMarkerDragListener(this)
+            }
     }
 
     override fun onStart() {
         super.onStart()
-        mapView.onStart()
+        mapView?.onStart()
     }
 
     override fun onStop() {
         super.onStop()
-        mapView.onStop()
+        mapView?.onStop()
     }
 
     override fun onDestroy() {
-        //mapView.onDestroy()
+        mapView?.onDestroy()
         super.onDestroy()
 
     }
 
     override fun onPause() {
-        mapView.onPause()
-
+        mapView?.onPause()
         super.onPause()
     }
 
     override fun onResume() {
         super.onResume()
-        mapView.onResume()
+        mapView?.onResume()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        if(gps.isStarted){
-            gps.removeLocationUpdatesWithCallback()
+        locationTracker?.apply {
+            if(isStarted){
+                removeLocationUpdates()
+            }
         }
+
     }
 
     override fun onClick(v: View?) {
         if(checkLocationPermissions()){
-            if(gps.isStarted){
-                navigateToLocation(currentLocation)
-            }else gps.startLocationsRequest()
+            locationTracker?.apply {
+                if(isStarted){
+                    navigateToLocation(lastKnownLocation)
+                }else startLocationsRequest()
+            }
         } else requestLocationPermissions()
     }
 
     private fun navigateToLocation(location: LatLng, zoom: Float=16.0f) {
         val update=CameraUpdateFactory.newLatLngZoom(location, zoom)
-        hMap.clear()
-        hMap.animateCamera(update)
-        val marker=MarkerOptions()
-            .title("You are here")
-            .position(location)
-        hMap.addMarker(marker)
+        hMap?.apply {
+            clear()
+            animateCamera(update)
+            val marker=MarkerOptions()
+                .title("You are here")
+                .position(location)
+            addMarker(marker)
+        }
     }
 
     private fun requestLocationPermissions() {
         requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_BACKGROUND_LOCATION),LOCATION_REQUEST)
     }
 
-    private fun setupGPS() {
-        gps= GPS(requireContext())
-        gps.gpsEventListener=this
-        gps.startLocationsRequest()
+    private fun setupLocationTracker() {
+        if(locationTracker==null){
+            locationTracker= LocationTracker(requireContext())
+        }
+        locationTracker?.apply {
+            gpsEventListener=this@MapFragment
+            startLocationsRequest()
+        }
     }
 
     private fun checkLocationPermissions(): Boolean {
@@ -171,8 +187,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener, GPS.On
     }
 
     override fun onLastKnownLocation(lat: Double, lon: Double) {
-        currentLocation.latitude=lat
-        currentLocation.longitude=lon
+        lastKnownLocation.latitude=lat
+        lastKnownLocation.longitude=lon
         //
 
     }
@@ -184,23 +200,27 @@ class MapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener, GPS.On
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if(checkLocationPermissions()){
-            setupGPS()
+            setupLocationTracker()
         }
     }
 
     override fun onDetach() {
         super.onDetach()
-        if(gps.isStarted){
-            gps.removeLocationUpdatesWithCallback()
+        locationTracker?.apply {
+            if(isStarted){
+                removeLocationUpdates()
+            }
         }
+
     }
 
     override fun onPoiClick(poi: PointOfInterest) {
-        val id =poi.placeId
+        val encodedKey=URLEncoder.encode(apiKey, StandardCharsets.UTF_8.name())
         val searchService = SearchServiceFactory.create(requireContext(),
-            API_KEY)
-        val request = DetailSearchRequest()
-        request.siteId = id
+            encodedKey)
+
+
+        val request = DetailSearchRequest().apply { siteId=poi.placeId }
         // Create a search result listener.
         val resultListener =
             object : SearchResultListener<DetailSearchResponse?> {
@@ -210,14 +230,15 @@ class MapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener, GPS.On
                     if (result == null || result.site.also { site = it } == null) {
                         return
                     }
-                    loadDialog(site!!)
-                    //Log.e("SITE","${}")
+                    site?.let {
+                        Log.e(TAG,"Website: ${it.poi.websiteUrl}\t Phone:${it.poi.phone} \t Rating:${it.poi.rating}")
+                        loadDialog(it) }
                 }
 
                 // Return the result code and description upon a search exception.
                 override fun onSearchError(status: SearchStatus) {
                     Log.e(
-                        "TAG",
+                        TAG,
                         "Error : " + status.errorCode + " " + status.errorMessage
                     )
                 }
@@ -226,13 +247,15 @@ class MapFragment : Fragment(), OnMapReadyCallback, View.OnClickListener, GPS.On
     }
 
     private fun loadDialog(site: Site) {
-        val builder=AlertDialog.Builder(requireContext())
-        builder.setTitle(site.name)
-        builder.setMessage(site.formatAddress)
-        builder.setPositiveButton(R.string.ok){dialog, which ->
-            dialog.dismiss()
-        }
-        builder.create().show()
+        val tempMessage="${site.formatAddress}\n\n${site.poi.phone}\n\n${site.poi.websiteUrl}"
+        val message=tempMessage.replace("\n\nnull","")
+        AlertDialog.Builder(requireContext()).apply {
+            setTitle(site.name)
+            setMessage(message)
+            setPositiveButton(R.string.ok){dialog,_ ->
+                dialog.dismiss()
+            }
+        }.create().show()
     }
 
     override fun onMarkerDragEnd(p0: Marker?) {

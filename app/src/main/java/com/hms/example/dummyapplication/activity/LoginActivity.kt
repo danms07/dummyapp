@@ -253,12 +253,16 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener,
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == HWID_SIGN_IN) {
-            handleHWSignIn(data)
-        } else if (requestCode == GOOGLE_SIGN_IN) {
-            handleGoogleSignIn(data)
-        } else {
-            mCallbackManager.onActivityResult(requestCode, resultCode, data)//For facebook
+        when (requestCode) {
+            HWID_SIGN_IN -> {
+                handleHWSignIn(data)
+            }
+            GOOGLE_SIGN_IN -> {
+                handleGoogleSignIn(data)
+            }
+            else -> {
+                mCallbackManager.onActivityResult(requestCode, resultCode, data)//For facebook
+            }
         }
     }
 
